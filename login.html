@@ -1,0 +1,298 @@
+<?php
+$loginMessage = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Your existing login logic here
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Eventify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+        body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
+                #080818;
+        }
+        .mesh-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
+                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
+                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
+            background-size: 23% 23%;
+        }
+
+        .page-wrap { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+        /* ── LEFT PANEL ── */
+        .left-panel {
+            width: 50%; display: flex; flex-direction: column; justify-content: center;
+            padding: 60px 64px;
+            background: rgba(255,255,255,0.022);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+        .logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 52px; }
+        .logo-cube { width: 36px; height: 36px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
+        @keyframes spinCube { 0% { transform: rotateX(20deg) rotateY(0deg); } 100% { transform: rotateX(20deg) rotateY(360deg); } }
+        .cube-face { position: absolute; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
+        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(18px); }
+        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(18px); }
+        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(18px); }
+        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(18px); }
+        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(18px); }
+        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(18px); }
+        .logo-text { font-size: 1.3rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+        .logo-text span { color: var(--orange); }
+
+        .login-head { margin-bottom: 36px; }
+        .login-head h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 10px; }
+        .login-head p  { font-size: 0.95rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+        .error-box { background: rgba(255,60,60,0.10); border: 1px solid rgba(255,60,60,0.20); border-radius: 10px; padding: 10px 14px; margin-bottom: 20px; font-size: 13px; color: rgba(255,120,120,0.9); text-align: center; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 9px; }
+        .input-wrap { position: relative; }
+        .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 17px; color: rgba(255,255,255,0.25); pointer-events: none; }
+        .input-wrap input { width: 100%; padding: 14px 14px 14px 44px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; color: #fff; font-size: 14.5px; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s; }
+        .input-wrap input::placeholder { color: rgba(255,255,255,0.20); }
+        .input-wrap input:focus { border-color: rgba(255,140,0,0.50); background: rgba(255,255,255,0.07); box-shadow: 0 0 0 3px rgba(255,140,0,0.10); }
+        .forgot-link { display: block; text-align: right; font-size: 12.5px; color: rgba(255,140,0,0.75); text-decoration: none; margin-top: 8px; transition: color 0.2s; }
+        .forgot-link:hover { color: var(--orange); }
+        .btn-login { width: 100%; margin-top: 28px; padding: 15px; background: linear-gradient(135deg, var(--orange), var(--orange-deep)); color: #fff; font-size: 15px; font-weight: 700; border: none; border-radius: 13px; cursor: pointer; box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s; }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+        .divider-row { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+        .div-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+        .div-text  { font-size: 12px; color: rgba(255,255,255,0.30); }
+        .signup-link { text-align: center; font-size: 13.5px; color: rgba(255,255,255,0.35); }
+        .signup-link a { color: var(--orange); font-weight: 600; text-decoration: none; }
+        .signup-link a:hover { color: #ffab40; }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel { width: 50%; display: flex; align-items: center; justify-content: center; padding: 48px 44px; }
+
+        /* Big card with full background image */
+        .right-card {
+            width: 100%; max-width: 430px;
+            position: relative; border-radius: 28px; overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+            box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+            min-height: 520px;
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .card-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+            transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+        }
+        .right-card:hover .card-bg-img { transform: scale(1.05); }
+
+        .card-bg-overlay {
+            position: absolute; inset: 0; z-index: 1;
+            background:
+                linear-gradient(to top,
+                    rgba(5,5,20,0.97) 0%,
+                    rgba(5,5,20,0.82) 35%,
+                    rgba(5,5,20,0.40) 65%,
+                    rgba(5,5,20,0.12) 100%);
+        }
+        .card-bg-overlay::after {
+            content: ''; position: absolute;
+            top: -60px; right: -60px;
+            width: 220px; height: 220px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,140,0,0.18) 0%, transparent 70%);
+        }
+        .card-top-strip {
+            position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 3;
+            background: linear-gradient(90deg, transparent, #FF8C00, transparent);
+        }
+        .card-content { position: relative; z-index: 2; padding: 28px 30px; }
+
+        .rc-badge {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: rgba(255,140,0,0.18); border: 1px solid rgba(255,140,0,0.35);
+            color: #FFB347; font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
+            padding: 5px 14px; border-radius: 99px; margin-bottom: 16px; text-transform: uppercase;
+        }
+        .rc-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); animation: blink 2s infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+        .rc-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+        .rc-sub   { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
+
+        /* Event cards with bg */
+        .event-card-bg {
+            position: relative; border-radius: 14px; overflow: hidden;
+            margin-bottom: 10px; height: 82px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .event-card-bg:hover { transform: scale(1.02) translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.5); }
+        .event-card-bg .ebg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .event-card-bg:hover .ebg { transform: scale(1.08); }
+        .event-card-bg .eov { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,5,20,0.88) 0%, rgba(5,5,20,0.50) 60%, rgba(5,5,20,0.18) 100%); }
+        .event-card-bg .ein { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; padding: 14px 16px; height: 100%; }
+        .eicon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(255,255,255,0.12); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); }
+        .einfo { flex: 1; }
+        .ename { font-size: 13.5px; font-weight: 700; color: #fff; margin-bottom: 3px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+        .edate { font-size: 11px; color: rgba(255,255,255,0.55); }
+        .ebadge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 99px; white-space: nowrap; backdrop-filter: blur(6px); }
+        .b-live { background: rgba(0,200,100,0.25);  color: rgba(100,255,160,0.95); border: 1px solid rgba(0,200,100,0.30); }
+        .b-soon { background: rgba(255,140,0,0.25);  color: rgba(255,190,80,0.95);  border: 1px solid rgba(255,140,0,0.30); }
+        .b-full { background: rgba(255,60,60,0.22);  color: rgba(255,130,130,0.95); border: 1px solid rgba(255,60,60,0.25); }
+
+        .stat-row { display: flex; gap: 10px; margin-top: 14px; }
+        .stat-mini { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09); border-radius: 11px; padding: 12px; text-align: center; backdrop-filter: blur(8px); }
+        .sn { font-size: 1.3rem; font-weight: 800; color: var(--orange); letter-spacing: -1px; }
+        .sl { font-size: 10px; color: rgba(255,255,255,0.35); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+        @media (max-width: 768px) {
+            .page-wrap { flex-direction: column; }
+            .left-panel { width: 100%; padding: 40px 28px; }
+            .right-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+<div class="page-wrap">
+
+    <!-- LEFT: Login Form -->
+    <div class="left-panel">
+        <div class="logo-row">
+            <div class="logo-cube">
+                <div class="cube-face cf-front">E</div>
+                <div class="cube-face cf-back"></div>
+                <div class="cube-face cf-left"></div>
+                <div class="cube-face cf-right"></div>
+                <div class="cube-face cf-top"></div>
+                <div class="cube-face cf-bottom"></div>
+            </div>
+            <div class="logo-text">Event<span>ify</span></div>
+        </div>
+        <div class="login-head">
+            <h1>Welcome Back 👋</h1>
+            <p>Sign in to manage your events and registrations.</p>
+        </div>
+        <?php if (!empty($loginMessage)): ?>
+        <div class="error-box"><?php echo htmlspecialchars($loginMessage); ?></div>
+        <?php endif; ?>
+        <form action="login.php" method="POST">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrap">
+                    <i class="ti ti-mail"></i>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <i class="ti ti-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn-login">Sign In to Eventify</button>
+        </form>
+        <div class="divider-row">
+            <div class="div-line"></div>
+            <div class="div-text">New here?</div>
+            <div class="div-line"></div>
+        </div>
+        <div class="signup-link">Don't have an account? <a href="signup.html">Create one free →</a></div>
+    </div>
+
+    <!-- RIGHT: Big card with full background image -->
+    <div class="right-panel">
+        <div class="right-card" id="rightCard">
+
+            <!-- Full card background -->
+            <img class="card-bg-img"
+                src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=85"
+                alt="Event background">
+            <div class="card-bg-overlay"></div>
+            <div class="card-top-strip"></div>
+
+            <div class="card-content">
+                <div class="rc-badge"><span class="rc-badge-dot"></span> Live Events</div>
+                <div class="rc-title">Your Upcoming Events</div>
+                <div class="rc-sub">Here's what's happening this week</div>
+
+                <div class="event-card-bg">
+                    <img class="ebg" src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80" alt="">
+                    <div class="eov"></div>
+                    <div class="ein">
+                        <div class="eicon">🎤</div>
+                        <div class="einfo">
+                            <div class="ename">Tech Summit 2025</div>
+                            <div class="edate">Dec 15, 2025 · Online</div>
+                        </div>
+                        <span class="ebadge b-live">● Live</span>
+                    </div>
+                </div>
+
+                <div class="event-card-bg">
+                    <img class="ebg" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80" alt="">
+                    <div class="eov"></div>
+                    <div class="ein">
+                        <div class="eicon">🎨</div>
+                        <div class="einfo">
+                            <div class="ename">Design Workshop</div>
+                            <div class="edate">Dec 18, 2025 · Lahore</div>
+                        </div>
+                        <span class="ebadge b-soon">Soon</span>
+                    </div>
+                </div>
+
+                <div class="event-card-bg">
+                    <img class="ebg" src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80" alt="">
+                    <div class="eov"></div>
+                    <div class="ein">
+                        <div class="eicon">🎵</div>
+                        <div class="einfo">
+                            <div class="ename">Music Festival</div>
+                            <div class="edate">Dec 22, 2025 · Karachi</div>
+                        </div>
+                        <span class="ebadge b-full">Full</span>
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-mini"><div class="sn">24</div><div class="sl">Events</div></div>
+                    <div class="stat-mini"><div class="sn">1.2K</div><div class="sl">Attendees</div></div>
+                    <div class="stat-mini"><div class="sn">98%</div><div class="sl">Rated</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const card = document.getElementById('rightCard');
+    document.addEventListener('mousemove', e => {
+        const r  = card.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width  / 2)) / (window.innerWidth  / 2);
+        const dy = (e.clientY - (r.top  + r.height / 2)) / (window.innerHeight / 2);
+        card.style.transform = `rotateY(${dx * 10}deg) rotateX(${-dy * 8}deg)`;
+    });
+    document.addEventListener('mouseleave', () => { card.style.transform = ''; });
+</script>
+</body>
+</html>

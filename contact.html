@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us — Eventify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+        body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
+                #080818;
+        }
+        .mesh-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
+                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
+                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
+            background-size: 23% 23%;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 56px;
+            background: rgba(8,8,24,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(24px);
+        }
+        .logo-row { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-cube { width: 36px; height: 36px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
+        @keyframes spinCube { 0% { transform: rotateX(20deg) rotateY(0deg); } 100% { transform: rotateX(20deg) rotateY(360deg); } }
+        .cube-face { position: absolute; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
+        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(18px); }
+        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(18px); }
+        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(18px); }
+        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(18px); }
+        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(18px); }
+        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(18px); }
+        .logo-text { font-size: 1.25rem; font-weight: 800; color: #fff; }
+        .logo-text span { color: var(--orange); }
+        .nav-links { display: flex; gap: 4px; list-style: none; }
+        .nav-links a { color: rgba(255,255,255,0.55); font-size: 13.5px; font-weight: 500; text-decoration: none; padding: 8px 14px; border-radius: 9px; transition: all 0.2s; }
+        .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+        .nav-links a.active { color: var(--orange); }
+
+        /* Hero */
+        .page-hero {
+            position: relative; z-index: 1;
+            text-align: center; padding: 72px 24px 52px;
+        }
+        .sec-tag {
+            font-size: 10.5px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 14px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .sec-tag::before { content: ''; display: block; width: 18px; height: 1.5px; background: var(--orange); }
+        .page-hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; letter-spacing: -2px; margin-bottom: 14px; }
+        .page-hero p { font-size: 1rem; color: rgba(255,255,255,0.42); max-width: 480px; margin: 0 auto; line-height: 1.75; }
+
+        /* Main content */
+        .content-wrap {
+            position: relative; z-index: 1;
+            max-width: 1060px; margin: 0 auto;
+            padding: 0 24px 80px;
+            display: flex; gap: 28px; flex-wrap: wrap;
+        }
+
+        /* Contact Info Card */
+        .contact-info-card {
+            flex: 1; min-width: 280px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px; padding: 36px 32px;
+            backdrop-filter: blur(12px);
+            position: relative; overflow: hidden;
+        }
+        .contact-info-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+        .info-card-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; }
+        .info-card-sub { font-size: 0.875rem; color: rgba(255,255,255,0.38); margin-bottom: 28px; }
+
+        .info-group { margin-bottom: 24px; }
+        .info-label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 11px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 10px;
+        }
+        .info-label i { font-size: 15px; }
+        .info-item {
+            font-size: 13.5px; color: rgba(255,255,255,0.55);
+            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            line-height: 1.5;
+        }
+        .info-item:last-child { border-bottom: none; }
+
+        /* Contact Form Card */
+        .contact-form-card {
+            flex: 1.4; min-width: 300px;
+            background: rgba(255,255,255,0.022);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px; padding: 36px 36px;
+            backdrop-filter: blur(12px);
+            position: relative; overflow: hidden;
+        }
+        .contact-form-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+        .form-card-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; }
+        .form-card-sub { font-size: 0.875rem; color: rgba(255,255,255,0.38); margin-bottom: 28px; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block; font-size: 12px; font-weight: 600;
+            color: rgba(255,255,255,0.45); letter-spacing: 0.6px;
+            text-transform: uppercase; margin-bottom: 9px;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap i {
+            position: absolute; left: 14px; top: 50%;
+            transform: translateY(-50%); font-size: 17px;
+            color: rgba(255,255,255,0.25); pointer-events: none;
+        }
+        .input-wrap.textarea-wrap i { top: 16px; transform: none; }
+        .input-wrap input,
+        .input-wrap textarea {
+            width: 100%; padding: 13px 14px 13px 44px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 12px; color: #fff; font-size: 14px;
+            font-family: 'Inter', sans-serif; outline: none;
+            transition: all 0.2s; resize: none;
+        }
+        .input-wrap input::placeholder,
+        .input-wrap textarea::placeholder { color: rgba(255,255,255,0.20); }
+        .input-wrap input:focus,
+        .input-wrap textarea:focus {
+            border-color: rgba(255,140,0,0.50);
+            background: rgba(255,255,255,0.07);
+            box-shadow: 0 0 0 3px rgba(255,140,0,0.10);
+        }
+
+        .btn-submit {
+            width: 100%; margin-top: 8px; padding: 15px;
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; font-size: 15px; font-weight: 700;
+            border: none; border-radius: 13px; cursor: pointer;
+            box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+
+        /* Footer */
+        footer {
+            position: relative; z-index: 1;
+            padding: 28px 56px;
+            background: rgba(255,255,255,0.015);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+        footer p { font-size: 12px; color: rgba(255,255,255,0.22); margin: 3px 0; }
+
+        @media (max-width: 768px) {
+            .content-wrap { flex-direction: column; }
+            .navbar-custom { padding: 14px 20px; }
+            .nav-links { display: none; }
+            .contact-form-card, .contact-info-card { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+
+<!-- Navbar -->
+<nav class="navbar-custom">
+    <a class="logo-row" href="main.html">
+        <div class="logo-cube">
+            <div class="cube-face cf-front">E</div>
+            <div class="cube-face cf-back"></div>
+            <div class="cube-face cf-left"></div>
+            <div class="cube-face cf-right"></div>
+            <div class="cube-face cf-top"></div>
+            <div class="cube-face cf-bottom"></div>
+        </div>
+        <span class="logo-text">Event<span>ify</span></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="main.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<div class="page-hero">
+    <div class="sec-tag">Get In Touch</div>
+    <h1>Contact Us 📬</h1>
+    <p>We're here to assist you! Reach out to us for any queries or feedback.</p>
+</div>
+
+<!-- Content -->
+<div class="content-wrap">
+
+    <!-- Left: Contact Details -->
+    <div class="contact-info-card">
+        <div class="info-card-title">Contact Details</div>
+        <div class="info-card-sub">Reach us through any of the following:</div>
+
+        <div class="info-group">
+            <div class="info-label"><i class="ti ti-phone"></i> Phone</div>
+            <div class="info-item">+92-321-4268177</div>
+            <div class="info-item">+92-324-4921459</div>
+            <div class="info-item">+92-302-4682710</div>
+            <div class="info-item">+92-333-4645869</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label"><i class="ti ti-mail"></i> Email</div>
+            <div class="info-item">info@a2zeventssolutions.com</div>
+            <div class="info-item">a2zeventssolutions@gmail.com</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label"><i class="ti ti-map-pin"></i> Head Office</div>
+            <div class="info-item">M-23 Siddique Trade Center<br>Main Boulevard Gulberg III, Lahore</div>
+        </div>
+    </div>
+
+    <!-- Right: Contact Form -->
+    <div class="contact-form-card">
+        <div class="form-card-title">Send Us a Message</div>
+        <div class="form-card-sub">We'll get back to you as soon as possible.</div>
+
+        <!-- action & method same as original -->
+        <form action="contact.php" method="post">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <div class="input-wrap">
+                    <i class="ti ti-user"></i>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-wrap">
+                    <i class="ti ti-mail"></i>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <div class="input-wrap">
+                    <i class="ti ti-tag"></i>
+                    <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <div class="input-wrap textarea-wrap">
+                    <i class="ti ti-message"></i>
+                    <textarea id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Send Message →</button>
+        </form>
+    </div>
+
+</div>
+
+<footer>
+    <p>© 2024 Event Solutions. All rights reserved.</p>
+</footer>
+</body>
+</html>

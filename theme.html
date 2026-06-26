@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Event — Eventify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+        body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
+                #080818;
+        }
+        .mesh-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
+                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
+                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
+            background-size: 23% 23%;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 56px;
+            background: rgba(8,8,24,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(24px);
+        }
+        .logo-row { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-cube { width: 36px; height: 36px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
+        @keyframes spinCube { 0% { transform: rotateX(20deg) rotateY(0deg); } 100% { transform: rotateX(20deg) rotateY(360deg); } }
+        .cube-face { position: absolute; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
+        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(18px); }
+        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(18px); }
+        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(18px); }
+        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(18px); }
+        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(18px); }
+        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(18px); }
+        .logo-text { font-size: 1.25rem; font-weight: 800; color: #fff; }
+        .logo-text span { color: var(--orange); }
+
+        /* Page */
+        .page-wrap { position: relative; z-index: 1; padding: 60px 24px 80px; }
+        .page-header { text-align: center; margin-bottom: 48px; }
+        .sec-tag {
+            font-size: 10.5px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .sec-tag::before { content: ''; display: block; width: 18px; height: 1.5px; background: var(--orange); }
+        .page-header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.2px; margin-bottom: 10px; }
+        .page-header p { font-size: 0.95rem; color: rgba(255,255,255,0.42); }
+
+        .events-grid {
+            max-width: 960px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+        }
+
+        /* Event card */
+        .event-card {
+            position: relative; border-radius: 20px; overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.06);
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+            height: 220px;
+        }
+        .event-card:hover { transform: translateY(-4px); border-color: rgba(255,140,0,0.30); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .event-card.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,140,0,0.20), 0 20px 50px rgba(0,0,0,0.5); }
+
+        .event-card input[type="radio"] { display: none; }
+
+        .event-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .event-card:hover img { transform: scale(1.06); }
+        .event-card .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(5,5,20,0.95) 0%, rgba(5,5,20,0.50) 50%, rgba(5,5,20,0.15) 100%);
+        }
+        .event-card .card-content {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 20px 22px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .event-name { font-size: 1rem; font-weight: 700; color: #fff; }
+        .check-circle {
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; flex-shrink: 0;
+        }
+        .event-card.selected .check-circle {
+            background: var(--orange); border-color: var(--orange);
+        }
+        .check-circle i { font-size: 14px; color: #fff; opacity: 0; transition: opacity 0.2s; }
+        .event-card.selected .check-circle i { opacity: 1; }
+
+        /* Top badge */
+        .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; z-index: 2; background: linear-gradient(90deg, transparent, var(--orange), transparent); opacity: 0; transition: opacity 0.3s; }
+        .event-card.selected .card-top-strip { opacity: 1; }
+
+        .submit-wrap { max-width: 960px; margin: 28px auto 0; }
+        .btn-submit {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; font-size: 15px; font-weight: 700;
+            border: none; border-radius: 13px; cursor: pointer;
+            box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+
+        @media (max-width: 640px) {
+            .events-grid { grid-template-columns: 1fr; }
+            .navbar-custom { padding: 14px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+
+<nav class="navbar-custom">
+    <a class="logo-row" href="main.html">
+        <div class="logo-cube">
+            <div class="cube-face cf-front">E</div>
+            <div class="cube-face cf-back"></div>
+            <div class="cube-face cf-left"></div>
+            <div class="cube-face cf-right"></div>
+            <div class="cube-face cf-top"></div>
+            <div class="cube-face cf-bottom"></div>
+        </div>
+        <span class="logo-text">Event<span>ify</span></span>
+    </a>
+</nav>
+
+<div class="page-wrap">
+    <div class="page-header">
+        <div class="sec-tag">Step 2 of 3</div>
+        <h1>Choose Your Event Type 🎉</h1>
+        <p>Select the event that best fits what you're planning.</p>
+    </div>
+
+    <form action="pricing.html" method="get" id="themeForm">
+        <div class="events-grid">
+
+            <label class="event-card" id="card-event1" for="event1">
+                <div class="card-top-strip"></div>
+                <img src="https://media.self.com/photos/5e70f72443731c000882cfe7/4:3/w_2560%2Cc_limit/GettyImages-125112134.jpg" alt="Music Concert">
+                <div class="overlay"></div>
+                <input type="radio" id="event1" name="event" value="Music Concert" required>
+                <div class="card-content">
+                    <span class="event-name">🎵 Music Concert</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+            <label class="event-card" id="card-event2" for="event2">
+                <div class="card-top-strip"></div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDTwlWzjuIk5RU1qbrgwnvGZSHumYM2AVDRg&s" alt="Art Exhibition">
+                <div class="overlay"></div>
+                <input type="radio" id="event2" name="event" value="Art Exhibition">
+                <div class="card-content">
+                    <span class="event-name">🎨 Art Exhibition</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+            <label class="event-card" id="card-event3" for="event3">
+                <div class="card-top-strip"></div>
+                <img src="https://cdn1.matadornetwork.com/blogs/1/2018/09/Festival-in-Chiang-Mai-Thailand-1200x853.jpg" alt="Cultural Event">
+                <div class="overlay"></div>
+                <input type="radio" id="event3" name="event" value="Cultural Event">
+                <div class="card-content">
+                    <span class="event-name">🌍 Cultural Event</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+            <label class="event-card" id="card-event4" for="event4">
+                <div class="card-top-strip"></div>
+                <img src="https://images.stockcake.com/public/1/a/a/1aa7434f-b8ae-4c34-bf14-ac9655fb32b7_large/sunset-wedding-setup-stockcake.jpg" alt="Wedding Ceremony">
+                <div class="overlay"></div>
+                <input type="radio" id="event4" name="event" value="Wedding Ceremony">
+                <div class="card-content">
+                    <span class="event-name">💍 Wedding Ceremony</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+            <label class="event-card" id="card-event5" for="event5">
+                <div class="card-top-strip"></div>
+                <img src="https://rukminim2.flixcart.com/image/850/1000/xif0q/birthday-combo/z/e/h/birthday-party-decorations-kit-hbd-style-16-party-spritz-original-imags9wrwj2dmtgf.jpeg?q=90&crop=false" alt="Birthday">
+                <div class="overlay"></div>
+                <input type="radio" id="event5" name="event" value="Birthday">
+                <div class="card-content">
+                    <span class="event-name">🎂 Birthday</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+            <label class="event-card" id="card-event6" for="event6">
+                <div class="card-top-strip"></div>
+                <img src="https://i.pinimg.com/550x/fe/0a/ce/fe0ace213b520d16fc490774e1f5d3b0.jpg" alt="Outdoor Picnic">
+                <div class="overlay"></div>
+                <input type="radio" id="event6" name="event" value="Outdoor Picnic">
+                <div class="card-content">
+                    <span class="event-name">🌿 Outdoor Picnic</span>
+                    <div class="check-circle"><i class="ti ti-check"></i></div>
+                </div>
+            </label>
+
+        </div>
+
+        <div class="submit-wrap">
+            <button type="submit" class="btn-submit">Next — Select Pricing →</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.querySelectorAll('.event-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.event-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+</script>
+</body>
+</html>

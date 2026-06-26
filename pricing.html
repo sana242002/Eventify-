@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Pricing — Eventify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+        body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
+                #080818;
+        }
+        .mesh-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
+                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
+                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
+            background-size: 23% 23%;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center;
+            padding: 14px 56px;
+            background: rgba(8,8,24,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(24px);
+        }
+        .logo-row { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-cube { width: 36px; height: 36px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
+        @keyframes spinCube { 0% { transform: rotateX(20deg) rotateY(0deg); } 100% { transform: rotateX(20deg) rotateY(360deg); } }
+        .cube-face { position: absolute; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
+        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(18px); }
+        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(18px); }
+        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(18px); }
+        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(18px); }
+        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(18px); }
+        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(18px); }
+        .logo-text { font-size: 1.25rem; font-weight: 800; color: #fff; }
+        .logo-text span { color: var(--orange); }
+
+        /* Page */
+        .page-wrap { position: relative; z-index: 1; padding: 60px 24px 80px; }
+        .page-header { text-align: center; margin-bottom: 48px; }
+        .sec-tag {
+            font-size: 10.5px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .sec-tag::before { content: ''; display: block; width: 18px; height: 1.5px; background: var(--orange); }
+        .page-header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.2px; margin-bottom: 10px; }
+        .page-header p { font-size: 0.95rem; color: rgba(255,255,255,0.42); }
+
+        .pricing-grid {
+            max-width: 860px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+            margin-bottom: 28px;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 32px 28px;
+            backdrop-filter: blur(12px);
+            position: relative; overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .pricing-card:hover { border-color: rgba(255,140,0,0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+
+        .pricing-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; }
+        .pricing-card p { font-size: 0.875rem; color: rgba(255,255,255,0.42); margin-bottom: 20px; }
+
+        .form-label-dark { display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 9px; }
+
+        select {
+            width: 100%; padding: 13px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 12px; color: #fff; font-size: 14px;
+            font-family: 'Inter', sans-serif; outline: none;
+            appearance: none; -webkit-appearance: none;
+            cursor: pointer; transition: all 0.2s;
+        }
+        select option { background: #12122a; color: #fff; }
+        select:focus { border-color: rgba(255,140,0,0.50); background: rgba(255,255,255,0.07); box-shadow: 0 0 0 3px rgba(255,140,0,0.10); }
+
+        /* Total card */
+        .total-card {
+            max-width: 860px; margin: 0 auto 28px;
+            background: rgba(255,140,0,0.06);
+            border: 1px solid rgba(255,140,0,0.18);
+            border-radius: 20px; padding: 32px 36px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 24px; flex-wrap: wrap;
+        }
+        .total-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .total-card p { font-size: 0.85rem; color: rgba(255,255,255,0.40); }
+        .total-price-display { font-size: 2.6rem; font-weight: 900; color: var(--orange); letter-spacing: -2px; }
+
+        .submit-wrap { max-width: 860px; margin: 0 auto; }
+        .btn-submit {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; font-size: 15px; font-weight: 700;
+            border: none; border-radius: 13px; cursor: pointer;
+            box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+
+        @media (max-width: 640px) {
+            .pricing-grid { grid-template-columns: 1fr; }
+            .navbar-custom { padding: 14px 20px; }
+            .total-card { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+
+<nav class="navbar-custom">
+    <a class="logo-row" href="main.html">
+        <div class="logo-cube">
+            <div class="cube-face cf-front">E</div>
+            <div class="cube-face cf-back"></div>
+            <div class="cube-face cf-left"></div>
+            <div class="cube-face cf-right"></div>
+            <div class="cube-face cf-top"></div>
+            <div class="cube-face cf-bottom"></div>
+        </div>
+        <span class="logo-text">Event<span>ify</span></span>
+    </a>
+</nav>
+
+<div class="page-wrap">
+    <div class="page-header">
+        <div class="sec-tag">Step 3 of 3</div>
+        <h1>Select Your Event Options 💰</h1>
+        <p>Choose an event type and decor to get the final price.</p>
+    </div>
+
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <div class="card-top-strip"></div>
+            <h3>Event Type</h3>
+            <p>Select the type of event you're hosting:</p>
+            <label class="form-label-dark">Event Type</label>
+            <select id="event-type" name="event_type">
+                <option value="100">🎂 Birthday — $100</option>
+                <option value="300">💍 Wedding — $300</option>
+                <option value="150">🎉 Party — $150</option>
+                <option value="200">💼 Corporate Event — $200</option>
+                <option value="250">🥂 Anniversary — $250</option>
+            </select>
+        </div>
+
+        <div class="pricing-card">
+            <div class="card-top-strip"></div>
+            <h3>Decor Type</h3>
+            <p>Select the decor type for your event:</p>
+            <label class="form-label-dark">Decor Package</label>
+            <select id="decor-type" name="decor_type">
+                <option value="0.2">✨ Basic Decor — 20%</option>
+                <option value="0.5">🌟 Standard Decor — 50%</option>
+                <option value="1">💎 Premium Decor — 100%</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="total-card">
+        <div>
+            <h3>Total Price</h3>
+            <p>Based on your event type and decor selection</p>
+        </div>
+        <div id="total-price" class="total-price-display">$120.00</div>
+    </div>
+
+    <div class="submit-wrap">
+        <form action="pricing.php" method="POST" id="pricingForm">
+            <input type="hidden" id="hidden-event-type" name="event_type" value="100">
+            <input type="hidden" id="hidden-decor-type" name="decor_type" value="0.2">
+            <input type="hidden" id="hidden-total-price" name="total_price" value="120.00">
+            <button class="btn-submit" id="confirm-button" type="submit">Confirm &amp; Book →</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateTotalPrice() {
+        const eventPrice = parseFloat(document.getElementById('event-type').value);
+        const decorMultiplier = parseFloat(document.getElementById('decor-type').value);
+        const totalPrice = eventPrice + (eventPrice * decorMultiplier);
+        document.getElementById('total-price').innerText = '$' + totalPrice.toFixed(2);
+        document.getElementById('hidden-total-price').value = totalPrice.toFixed(2);
+        document.getElementById('hidden-event-type').value = document.getElementById('event-type').value;
+        document.getElementById('hidden-decor-type').value = document.getElementById('decor-type').value;
+    }
+
+    document.getElementById('event-type').addEventListener('change', updateTotalPrice);
+    document.getElementById('decor-type').addEventListener('change', updateTotalPrice);
+    window.onload = updateTotalPrice;
+
+    document.getElementById('confirm-button').addEventListener('click', function(e) {
+        if (confirm('Confirm your booking?')) {
+            return true;
+        }
+        e.preventDefault();
+    });
+</script>
+</body>
+</html>
