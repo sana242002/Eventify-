@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -329,7 +330,11 @@
         <h1>Manage Events<br><span class="accent">Like Never Before</span></h1>
         <p>Your journey to seamless event planning starts here. Create, manage, and grow your events with zero friction.</p>
         <div class="cta-group">
-            <a href="login.html" class="btn-primary-custom" id="createEventBtn">🎟 Create Your Event</a>
+          <?php if (isset($_SESSION['user_id'])): ?>
+    <a href="register.php" class="btn-primary-custom">🎟 Create Your Event</a>
+<?php else: ?>
+    <a href="login.html" class="btn-primary-custom">🎟 Create Your Event</a>
+<?php endif; ?>
             <a href="#gallery" class="btn-ghost">Explore Events →</a>
         </div>
     </div>
@@ -415,7 +420,11 @@
 <div class="cta-banner">
     <h2>Ready to Host Your Next Event?</h2>
     <p>Join thousands of event organizers who trust Eventify to deliver unforgettable experiences.</p>
-    <a href="login.html" class="btn-primary-custom" id="createEventBtn">🎟 Create Your Event</a>
+    <?php if (isset($_SESSION['user_id'])): ?>
+    <a href="register.php" class="btn-primary-custom">🎟 Create Your Event</a>
+<?php else: ?>
+    <a href="login.html" class="btn-primary-custom">🎟 Create Your Event</a>
+<?php endif; ?>
 </div>
 
 <!-- Footer -->
