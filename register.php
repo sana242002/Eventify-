@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.html");
+    header("Location: login.php?redirect=register.php");
     exit();
 }
 
@@ -54,24 +54,18 @@ $conn->close();
         :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
         body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
 
-        .mesh-bg {
+        /* ── Themed background image ── */
+        .bg-image {
+            position: fixed; inset: 0; z-index: 0;
+            background-image: url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1600&q=80');
+            background-size: cover; background-position: center;
+            filter: brightness(0.45) saturate(0.85);
+            pointer-events: none;
+        }
+        .bg-overlay {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background:
-                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
-                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
-                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
-                #080818;
-        }
-        .mesh-bg::before {
-            content: ''; position: absolute; inset: 0;
-            background-image:
-                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
-                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
-                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
-                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
-                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
-                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
-            background-size: 23% 23%;
+                linear-gradient(180deg, rgba(8,8,24,0.45) 0%, rgba(8,8,24,0.75) 100%);
         }
 
         .navbar-custom {
@@ -95,14 +89,30 @@ $conn->close();
         .logo-text { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
         .logo-text span { color: var(--orange); }
 
+        .nav-links-custom { display: flex; align-items: center; gap: 4px; list-style: none; }
+        .nav-links-custom a {
+            color: rgba(255,255,255,0.55); font-size: 13.5px; font-weight: 500;
+            text-decoration: none; padding: 8px 14px; border-radius: 9px;
+            transition: all 0.2s;
+        }
+        .nav-links-custom a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+        .nav-cta {
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep)) !important;
+            color: #fff !important; font-weight: 700 !important;
+            box-shadow: 0 4px 18px var(--orange-glow); margin-left: 8px;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,140,0,0.55) !important; }
+
         .page-wrap { position: relative; z-index: 1; padding: 60px 24px 80px; }
         .form-card {
             max-width: 780px; margin: 0 auto;
-            background: rgba(255,255,255,0.022);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(8,8,20,0.55);
+            border: 1px solid rgba(255,255,255,0.10);
             border-radius: 24px;
             padding: 48px 52px;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
         }
 
         .form-header { margin-bottom: 36px; }
@@ -124,8 +134,8 @@ $conn->close();
         .input-wrap input,
         .input-wrap select {
             width: 100%; padding: 13px 14px 13px 44px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.10);
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: 12px; color: #fff; font-size: 14px;
             font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s;
             appearance: none; -webkit-appearance: none;
@@ -136,7 +146,7 @@ $conn->close();
         .input-wrap input:focus,
         .input-wrap select:focus {
             border-color: rgba(255,140,0,0.50);
-            background: rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.09);
             box-shadow: 0 0 0 3px rgba(255,140,0,0.10);
         }
         .input-wrap input.input-error { border-color: rgba(255,60,60,0.50); box-shadow: 0 0 0 3px rgba(255,60,60,0.10); }
@@ -169,7 +179,8 @@ $conn->close();
     </style>
 </head>
 <body>
-<div class="mesh-bg"></div>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
 
 <nav class="navbar-custom">
     <a class="logo-row" href="main.php">
@@ -183,6 +194,12 @@ $conn->close();
         </div>
         <span class="logo-text">Event<span>ify</span></span>
     </a>
+    <ul class="nav-links-custom">
+        <li><a href="main.php">Home</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="register.php" class="nav-cta">Create Event</a></li>
+    </ul>
 </nav>
 
 <div class="page-wrap">

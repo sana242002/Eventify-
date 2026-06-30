@@ -1,435 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Eventify</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Eventify</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--orange:#FF8C00;--orange-deep:#ff4500;--orange-glow:rgba(255,140,0,0.35);}
+body{font-family:'Inter',sans-serif;background:#0a0a12;color:#fff;height:100vh;overflow:hidden;}
+.page-wrap{display:flex;height:100vh;}
 
-        body { font-family: 'Inter', sans-serif; background: #0a0a12; color: #fff; height: 100vh; overflow: hidden; }
+/* LEFT PANEL */
+.left-panel{
+  width:50%;display:flex;flex-direction:column;
+  position:relative;padding:0 56px;overflow:hidden;
+  border-right:1px solid rgba(255,255,255,0.07);
+}
+.left-panel::before{
+  content:'';position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=900&q=80');
+  background-size:cover;background-position:center;
+  filter:brightness(0.22) saturate(0.6);z-index:0;
+}
+.left-panel::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(160deg,rgba(10,8,18,0.82) 0%,rgba(15,10,25,0.75) 50%,rgba(30,15,5,0.65) 100%),
+    radial-gradient(ellipse 70% 60% at 50% 100%,rgba(255,100,0,0.13) 0%,transparent 65%);
+  z-index:1;
+}
+.logo-row,.form-section,.left-footer{position:relative;z-index:2;}
 
-        .page-wrap { display: flex; height: 100vh; }
+/* Logo */
+.logo-row{display:flex;align-items:center;gap:11px;padding-top:32px;flex-shrink:0;}
+.logo-cube{width:34px;height:34px;position:relative;transform-style:preserve-3d;animation:spinCube 9s linear infinite;}
+@keyframes spinCube{0%{transform:rotateX(20deg) rotateY(0deg);}100%{transform:rotateX(20deg) rotateY(360deg);}}
+.cube-face{position:absolute;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#fff;border:1px solid rgba(255,140,0,0.35);}
+.cf-front{background:rgba(255,130,0,0.90);transform:translateZ(17px);}
+.cf-back{background:rgba(200,80,0,0.70);transform:rotateY(180deg) translateZ(17px);}
+.cf-left{background:rgba(180,60,0,0.65);transform:rotateY(-90deg) translateZ(17px);}
+.cf-right{background:rgba(220,100,0,0.75);transform:rotateY(90deg) translateZ(17px);}
+.cf-top{background:rgba(255,160,0,0.85);transform:rotateX(90deg) translateZ(17px);}
+.cf-bottom{background:rgba(160,50,0,0.55);transform:rotateX(-90deg) translateZ(17px);}
+.logo-text{font-size:1.2rem;font-weight:800;color:#fff;}
+.logo-text span{color:var(--orange);}
 
-        /* ══════════════════ LEFT 50% ══════════════════ */
-        .left-panel {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            background: #0d0d1a;
-            border-right: 1px solid rgba(255,255,255,0.06);
-            padding: 0 56px;
-            position: relative;
-            overflow: hidden;
-        }
-        /* subtle orange glow bottom */
-        .left-panel::after {
-            content: '';
-            position: absolute; bottom: -100px; left: -60px;
-            width: 350px; height: 350px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,100,0,0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
+/* Form — centered horizontally */
+.form-section{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+.form-inner{width:100%;max-width:360px;}
+.login-head{margin-bottom:26px;}
+.login-head h1{font-size:2rem;font-weight:900;letter-spacing:-1.3px;margin-bottom:7px;}
+.login-head p{font-size:0.88rem;color:rgba(255,255,255,0.45);line-height:1.6;}
 
-        /* Logo */
-        .logo-row {
-            display: flex; align-items: center; gap: 11px;
-            padding-top: 32px; flex-shrink: 0;
-        }
-        .logo-cube { width: 34px; height: 34px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
-        @keyframes spinCube { 0%{transform:rotateX(20deg) rotateY(0deg);} 100%{transform:rotateX(20deg) rotateY(360deg);} }
-        .cube-face { position: absolute; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
-        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(17px); }
-        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(17px); }
-        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(17px); }
-        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(17px); }
-        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(17px); }
-        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(17px); }
-        .logo-text { font-size: 1.2rem; font-weight: 800; color: #fff; }
-        .logo-text span { color: var(--orange); }
+/* Error */
+.error-box{display:none;align-items:center;gap:10px;background:rgba(220,38,38,0.10);border:1px solid rgba(220,38,38,0.28);border-left:3px solid #ef4444;border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#fca5a5;animation:shakeIn 0.4s ease;}
+.error-box.show{display:flex;}
+@keyframes shakeIn{0%{transform:translateX(-6px);opacity:0;}40%{transform:translateX(4px);}70%{transform:translateX(-2px);}100%{transform:translateX(0);opacity:1;}}
 
-        /* Form — takes all middle space */
-        .form-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+/* Inputs */
+.form-group{margin-bottom:15px;}
+.form-group label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.input-wrap{position:relative;}
+.input-wrap .i-left{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;color:rgba(255,255,255,0.30);pointer-events:none;z-index:2;}
+/* Eye icon — positioned inside input right edge */
+.eye-btn{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.30);font-size:17px;padding:0;transition:color 0.2s;z-index:2;}
+.eye-btn:hover{color:var(--orange);}
+.input-wrap input{
+  width:100%;padding:13px 44px;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);
+  border-radius:12px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;
+  outline:none;transition:all 0.2s;
+}
+.input-wrap input::placeholder{color:rgba(255,255,255,0.28);}
+.input-wrap input:focus{border-color:rgba(255,140,0,0.50);background:rgba(255,255,255,0.10);box-shadow:0 0 0 3px rgba(255,140,0,0.12);}
 
-        .login-head { margin-bottom: 26px; }
-        .login-head h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1.3px; margin-bottom: 7px; }
-        .login-head p  { font-size: 0.88rem; color: rgba(255,255,255,0.38); line-height: 1.6; }
+/* Forgot link — sits right-aligned under password input */
+.forgot-link{display:block;text-align:right;font-size:12px;color:var(--orange);text-decoration:none;margin-top:7px;transition:opacity 0.2s;}
+.forgot-link:hover{opacity:0.75;}
 
-        /* Error */
-        .error-box {
-            display: none; align-items: center; gap: 10px;
-            background: rgba(220,38,38,0.10); border: 1px solid rgba(220,38,38,0.28);
-            border-left: 3px solid #ef4444;
-            border-radius: 10px; padding: 10px 14px; margin-bottom: 18px;
-            font-size: 13px; color: #fca5a5;
-            animation: shakeIn 0.4s ease;
-        }
-        .error-box.show { display: flex; }
-        @keyframes shakeIn {
-            0%{transform:translateX(-6px);opacity:0;}
-            40%{transform:translateX(4px);}
-            70%{transform:translateX(-2px);}
-            100%{transform:translateX(0);opacity:1;}
-        }
+/* Button — full width of form-inner */
+.btn-login{width:100%;margin-top:22px;padding:14px 20px;background:linear-gradient(135deg,var(--orange),var(--orange-deep));color:#fff;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;box-shadow:0 6px 22px var(--orange-glow);display:flex;align-items:center;justify-content:center;gap:10px;transition:transform 0.2s,box-shadow 0.2s,filter 0.2s;}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,120,0,0.48);filter:brightness(1.07);}
+.btn-login:active{transform:translateY(0);}
 
-        /* Inputs */
-        .form-group { margin-bottom: 15px; }
-        .form-group label {
-            display: block; font-size: 11px; font-weight: 600;
-            color: rgba(255,255,255,0.36); letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 7px;
-        }
-        .input-wrap { position: relative; }
-        .input-wrap .i-left {
-            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-            font-size: 17px; color: rgba(255,255,255,0.25); pointer-events: none;
-        }
-        .eye-btn {
-            position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer;
-            color: rgba(255,255,255,0.25); font-size: 17px; padding: 0; transition: color 0.2s;
-        }
-        .eye-btn:hover { color: var(--orange); }
-        .input-wrap input {
-            width: 100%; padding: 13px 44px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 12px; color: #fff;
-            font-size: 14px; font-family: 'Inter', sans-serif;
-            outline: none; transition: all 0.2s;
-        }
-        .input-wrap input::placeholder { color: rgba(255,255,255,0.24); }
-        .input-wrap input:focus {
-            border-color: rgba(255,140,0,0.48);
-            background: rgba(255,255,255,0.07);
-            box-shadow: 0 0 0 3px rgba(255,140,0,0.10);
-        }
-        .forgot-link {
-            display: block; text-align: right; font-size: 12px;
-            color: var(--orange); text-decoration: none; margin-top: 7px; transition: opacity 0.2s;
-        }
-        .forgot-link:hover { opacity: 0.75; }
+.divider-row{display:flex;align-items:center;gap:12px;margin:20px 0 15px;}
+.div-line{flex:1;height:1px;background:rgba(255,255,255,0.09);}
+.div-text{font-size:11px;color:rgba(255,255,255,0.28);}
+.signup-link{text-align:center;font-size:13px;color:rgba(255,255,255,0.35);}
+.signup-link a{color:var(--orange);font-weight:600;text-decoration:none;}
 
-        /* Button */
-        .btn-login {
-            width: 100%; margin-top: 22px; padding: 14px 20px;
-            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
-            color: #fff; font-size: 15px; font-weight: 700;
-            border: none; border-radius: 12px; cursor: pointer;
-            box-shadow: 0 6px 22px var(--orange-glow);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-        }
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,120,0,0.48); filter: brightness(1.07); }
-        .btn-login:active { transform: translateY(0); }
+/* Footer */
+.left-footer{flex-shrink:0;padding:18px 0 24px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.left-footer span{font-size:11px;color:rgba(255,255,255,0.22);}
+.footer-links{display:flex;gap:18px;}
+.footer-links a{font-size:11px;color:rgba(255,255,255,0.28);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--orange);}
 
-        .divider-row { display: flex; align-items: center; gap: 12px; margin: 20px 0 15px; }
-        .div-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
-        .div-text  { font-size: 11px; color: rgba(255,255,255,0.22); }
+/* RIGHT PANEL */
+.right-panel{width:50%;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 52px;overflow:hidden;}
+.right-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.right-overlay{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 65% 55% at 90% 10%,rgba(100,40,220,0.32) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 5% 95%,rgba(255,80,0,0.12) 0%,transparent 55%),linear-gradient(155deg,rgba(5,5,18,0.80) 0%,rgba(10,5,26,0.88) 100%);}
+.right-overlay::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle 1px at center,rgba(255,255,255,0.09) 0%,transparent 0%);background-size:28px 28px;}
+.right-content{position:relative;z-index:2;width:100%;max-width:380px;}
+.r-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,140,0,0.12);border:1px solid rgba(255,140,0,0.28);color:#FFB347;font-size:10px;font-weight:700;letter-spacing:1.2px;padding:5px 15px;border-radius:99px;margin-bottom:18px;text-transform:uppercase;}
+.r-dot{width:5px;height:5px;border-radius:50%;background:var(--orange);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.r-title{font-size:2.2rem;font-weight:900;letter-spacing:-1.4px;line-height:1.1;margin-bottom:12px;}
+.r-title .acc{color:var(--orange);display:block;}
+.r-sub{font-size:0.875rem;color:rgba(255,255,255,0.40);line-height:1.7;margin-bottom:28px;}
+.r-section-label{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;color:rgba(255,255,255,0.28);letter-spacing:1.3px;text-transform:uppercase;margin-bottom:12px;}
+.r-section-label i{font-size:14px;color:rgba(255,255,255,0.32);}
+.event-card{display:flex;align-items:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:13px;overflow:hidden;margin-bottom:9px;height:68px;transition:background 0.22s,border-color 0.22s,transform 0.22s;}
+.event-card:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);transform:translateX(3px);}
+.ec-thumb{width:90px;height:68px;flex-shrink:0;overflow:hidden;position:relative;}
+.ec-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.event-card:hover .ec-thumb img{transform:scale(1.08);}
+.ec-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 55%,rgba(10,10,22,0.55) 100%);}
+.ec-body{flex:1;padding:0 15px;}
+.ec-name{font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;letter-spacing:-0.2px;}
+.ec-date{font-size:10.5px;color:rgba(255,255,255,0.36);}
+.ec-badge-wrap{padding-right:15px;flex-shrink:0;}
+.ebadge{font-size:10px;font-weight:700;padding:4px 11px;border-radius:99px;}
+.b-live{background:rgba(0,180,90,0.18);color:#4ade80;border:1px solid rgba(0,180,90,0.28);}
+.b-soon{background:rgba(255,140,0,0.18);color:#fbbf24;border:1px solid rgba(255,140,0,0.26);}
+.b-full{background:rgba(220,38,38,0.16);color:#f87171;border:1px solid rgba(220,38,38,0.24);}
+.stat-row{display:flex;gap:10px;margin-top:14px;}
+.stat-mini{flex:1;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:13px;padding:13px 15px;transition:background 0.2s,border-color 0.2s;}
+.stat-mini:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.13);}
+.stat-icon{font-size:20px;flex-shrink:0;}
+.si-blue{color:#818cf8;}.si-orange{color:var(--orange);}.si-red{color:#f87171;}
+.stat-vals{display:flex;flex-direction:column;}
+.sn{font-size:1.25rem;font-weight:900;color:var(--orange);letter-spacing:-1px;line-height:1;}
+.sl{font-size:9.5px;color:rgba(255,255,255,0.26);font-weight:600;text-transform:uppercase;letter-spacing:0.9px;margin-top:3px;}
 
-        .signup-link { text-align: center; font-size: 13px; color: rgba(255,255,255,0.30); }
-        .signup-link a { color: var(--orange); font-weight: 600; text-decoration: none; }
-
-        /* Footer */
-        .left-footer {
-            flex-shrink: 0;
-            padding: 18px 0 24px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        }
-        .left-footer span { font-size: 11px; color: rgba(255,255,255,0.18); }
-        .footer-links { display: flex; gap: 18px; }
-        .footer-links a { font-size: 11px; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--orange); }
-
-        /* ══════════════════ RIGHT 50% ══════════════════ */
-        .right-panel {
-            width: 50%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;      /* vertically center everything */
-            padding: 40px 52px;
-            overflow: hidden;
-        }
-
-        .right-bg {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0;
-        }
-        .right-overlay {
-            position: absolute; inset: 0; z-index: 1;
-            background:
-                radial-gradient(ellipse 65% 55% at 90% 10%, rgba(100,40,220,0.32) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 50% at 5% 95%, rgba(255,80,0,0.12) 0%, transparent 55%),
-                linear-gradient(155deg, rgba(5,5,18,0.80) 0%, rgba(10,5,26,0.88) 100%);
-        }
-        .right-overlay::after {
-            content: ''; position: absolute; inset: 0;
-            background-image: radial-gradient(circle 1px at center, rgba(255,255,255,0.09) 0%, transparent 0%);
-            background-size: 28px 28px;
-        }
-
-        .right-content { position: relative; z-index: 2; width: 100%; }
-
-        /* Badge */
-        .r-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(255,140,0,0.12); border: 1px solid rgba(255,140,0,0.28);
-            color: #FFB347; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-            padding: 5px 15px; border-radius: 99px; margin-bottom: 18px; text-transform: uppercase;
-        }
-        .r-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); animation: blink 2s infinite; }
-        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-
-        /* Hero heading */
-        .r-title {
-            font-size: 2.2rem; font-weight: 900;
-            letter-spacing: -1.4px; line-height: 1.1; margin-bottom: 12px;
-        }
-        .r-title .acc { color: var(--orange); display: block; }
-        .r-sub {
-            font-size: 0.875rem; color: rgba(255,255,255,0.40);
-            line-height: 1.7; margin-bottom: 28px;
-        }
-
-        /* Section label */
-        .r-section-label {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.28);
-            letter-spacing: 1.3px; text-transform: uppercase; margin-bottom: 12px;
-        }
-        .r-section-label i { font-size: 14px; color: rgba(255,255,255,0.32); }
-
-        /* Event cards */
-        .event-card {
-            display: flex; align-items: center;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 13px; overflow: hidden;
-            margin-bottom: 9px; height: 68px;
-            transition: background 0.22s, border-color 0.22s, transform 0.22s;
-        }
-        .event-card:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.14);
-            transform: translateX(3px);
-        }
-        .ec-thumb {
-            width: 90px; height: 68px; flex-shrink: 0; overflow: hidden; position: relative;
-        }
-        .ec-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-        .event-card:hover .ec-thumb img { transform: scale(1.08); }
-        .ec-thumb::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(90deg, transparent 55%, rgba(10,10,22,0.55) 100%);
-        }
-        .ec-body { flex: 1; padding: 0 15px; }
-        .ec-name { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 3px; letter-spacing: -0.2px; }
-        .ec-date { font-size: 10.5px; color: rgba(255,255,255,0.36); }
-        .ec-badge-wrap { padding-right: 15px; flex-shrink: 0; }
-        .ebadge { font-size: 10px; font-weight: 700; padding: 4px 11px; border-radius: 99px; }
-        .b-live { background: rgba(0,180,90,0.18); color: #4ade80; border: 1px solid rgba(0,180,90,0.28); }
-        .b-soon { background: rgba(255,140,0,0.18); color: #fbbf24; border: 1px solid rgba(255,140,0,0.26); }
-        .b-full { background: rgba(220,38,38,0.16); color: #f87171; border: 1px solid rgba(220,38,38,0.24); }
-
-        /* Stats */
-        .stat-row { display: flex; gap: 10px; margin-top: 14px; }
-        .stat-mini {
-            flex: 1; display: flex; align-items: center; gap: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 13px; padding: 13px 15px;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .stat-mini:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.13); }
-        .stat-icon { font-size: 20px; flex-shrink: 0; }
-        .si-blue   { color: #818cf8; }
-        .si-orange { color: var(--orange); }
-        .si-red    { color: #f87171; }
-        .stat-vals { display: flex; flex-direction: column; }
-        .sn { font-size: 1.25rem; font-weight: 900; color: var(--orange); letter-spacing: -1px; line-height: 1; }
-        .sl { font-size: 9.5px; color: rgba(255,255,255,0.26); font-weight: 600; text-transform: uppercase; letter-spacing: 0.9px; margin-top: 3px; }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .right-panel { display: none; }
-            .left-panel  { width: 100%; padding: 0 28px; }
-        }
-    </style>
+@media(max-width:900px){.right-panel{display:none;}.left-panel{width:100%;padding:0 28px;}}
+</style>
 </head>
 <body>
 <div class="page-wrap">
 
-    <!-- ══════ LEFT ══════ -->
-    <div class="left-panel">
-
-        <div class="logo-row">
-            <div class="logo-cube">
-                <div class="cube-face cf-front">E</div>
-                <div class="cube-face cf-back"></div>
-                <div class="cube-face cf-left"></div>
-                <div class="cube-face cf-right"></div>
-                <div class="cube-face cf-top"></div>
-                <div class="cube-face cf-bottom"></div>
-            </div>
-            <div class="logo-text">Event<span>ify</span></div>
-        </div>
-
-        <div class="form-section">
-            <div class="login-head">
-                <h1>Welcome Back 👋</h1>
-                <p>Sign in to manage your events and registrations.</p>
-            </div>
-
-            <div class="error-box" id="errorBox">
-                <i class="ti ti-alert-circle" style="font-size:16px;flex-shrink:0;"></i>
-                <span id="errorMsg"></span>
-            </div>
-
-            <form action="login.php" method="POST">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <div class="input-wrap">
-                        <i class="ti ti-mail i-left"></i>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-wrap">
-                        <i class="ti ti-lock i-left"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                        <button type="button" class="eye-btn" id="eyeBtn">
-                            <i class="ti ti-eye" id="eyeIcon"></i>
-                        </button>
-                    </div>
-                    <a href="#" class="forgot-link">Forgot password?</a>
-                </div>
-                <button type="submit" class="btn-login">
-                    Sign In to Eventify <span>→</span>
-                </button>
-            </form>
-
-            <div class="divider-row">
-                <div class="div-line"></div>
-                <div class="div-text">New here?</div>
-                <div class="div-line"></div>
-            </div>
-            <div class="signup-link">
-                Don't have an account? <a href="signup.html">Create one free →</a>
-            </div>
-        </div>
-
-        <div class="left-footer">
-            <span>© 2025 Eventify. All rights reserved.</span>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Help</a>
-            </div>
-        </div>
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="logo-row">
+      <div class="logo-cube">
+        <div class="cube-face cf-front">E</div>
+        <div class="cube-face cf-back"></div>
+        <div class="cube-face cf-left"></div>
+        <div class="cube-face cf-right"></div>
+        <div class="cube-face cf-top"></div>
+        <div class="cube-face cf-bottom"></div>
+      </div>
+      <div class="logo-text">Event<span>ify</span></div>
     </div>
 
-    <!-- ══════ RIGHT ══════ -->
-    <div class="right-panel">
-        <img class="right-bg"
-            src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1400&q=85" alt="">
-        <div class="right-overlay"></div>
-
-        <div class="right-content">
-            <div class="r-badge"><span class="r-dot"></span> Now Live — 2025</div>
-
-            <div class="r-title">
-                Your Events,
-                <span class="acc">Elevated.</span>
-            </div>
-            <div class="r-sub">
-                Join thousands of organizers who trust Eventify to create
-                unforgettable experiences — from intimate meetups to global conferences.
-            </div>
-
-            <div class="r-section-label">
-                <i class="ti ti-calendar-event"></i>
-                Happening This Week
-            </div>
-
-            <div class="event-card">
-                <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80" alt=""></div>
-                <div class="ec-body">
-                    <div class="ec-name">Tech Summit 2025</div>
-                    <div class="ec-date">Dec 15, 2025 · Online</div>
-                </div>
-                <div class="ec-badge-wrap"><span class="ebadge b-live">Live</span></div>
-            </div>
-
-            <div class="event-card">
-                <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=300&q=80" alt=""></div>
-                <div class="ec-body">
-                    <div class="ec-name">Design Workshop</div>
-                    <div class="ec-date">Dec 18, 2025 · Lahore</div>
-                </div>
-                <div class="ec-badge-wrap"><span class="ebadge b-soon">Soon</span></div>
-            </div>
-
-            <div class="event-card">
-                <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&q=80" alt=""></div>
-                <div class="ec-body">
-                    <div class="ec-name">Music Festival</div>
-                    <div class="ec-date">Dec 22, 2025 · Karachi</div>
-                </div>
-                <div class="ec-badge-wrap"><span class="ebadge b-full">Full</span></div>
-            </div>
-
-            <div class="stat-row">
-                <div class="stat-mini">
-                    <i class="ti ti-calendar stat-icon si-blue"></i>
-                    <div class="stat-vals"><div class="sn">12K+</div><div class="sl">Events</div></div>
-                </div>
-                <div class="stat-mini">
-                    <i class="ti ti-star stat-icon si-orange"></i>
-                    <div class="stat-vals"><div class="sn">98%</div><div class="sl">Rated</div></div>
-                </div>
-                <div class="stat-mini">
-                    <i class="ti ti-map-pin stat-icon si-red"></i>
-                    <div class="stat-vals"><div class="sn">200+</div><div class="sl">Cities</div></div>
-                </div>
-            </div>
+    <div class="form-section">
+      <div class="form-inner">
+        <div class="login-head">
+          <h1>Welcome Back 👋</h1>
+          <p>Sign in to manage your events and registrations.</p>
         </div>
+        <div class="error-box" id="errorBox">
+          <i class="ti ti-alert-circle" style="font-size:16px;flex-shrink:0;"></i>
+          <span id="errorMsg"></span>
+        </div>
+        <form action="login.php" method="POST">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrap">
+              <i class="ti ti-mail i-left"></i>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <i class="ti ti-lock i-left"></i>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required>
+              <button type="button" class="eye-btn" id="eyeBtn">
+                <i class="ti ti-eye" id="eyeIcon"></i>
+              </button>
+            </div>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+          <button type="submit" class="btn-login">
+            Sign In to Eventify 
+          </button>
+        </form>
+        <div class="divider-row">
+          <div class="div-line"></div>
+          <div class="div-text">New here?</div>
+          <div class="div-line"></div>
+        </div>
+        <div class="signup-link">
+          Don't have an account? <a href="signup.html">sign up→</a>
+        </div>
+      </div>
     </div>
+
+    <div class="left-footer">
+      <span>© 2025 Eventify. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <img class="right-bg" src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1400&q=85" alt="">
+    <div class="right-overlay"></div>
+    <div class="right-content">
+      <div class="r-badge"><span class="r-dot"></span> Now Live — 2025</div>
+      <div class="r-title">Your Events,<span class="acc">Elevated.</span></div>
+      <div class="r-sub">Join thousands of organizers who trust Eventify to create unforgettable experiences — from intimate meetups to global conferences.</div>
+      <div class="r-section-label"><i class="ti ti-calendar-event"></i> Happening This Week</div>
+      <div class="event-card">
+        <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80" alt=""></div>
+        <div class="ec-body"><div class="ec-name">Tech Summit 2025</div><div class="ec-date">Dec 15, 2025 · Online</div></div>
+        <div class="ec-badge-wrap"><span class="ebadge b-live">Live</span></div>
+      </div>
+      <div class="event-card">
+        <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=300&q=80" alt=""></div>
+        <div class="ec-body"><div class="ec-name">Design Workshop</div><div class="ec-date">Dec 18, 2025 · Lahore</div></div>
+        <div class="ec-badge-wrap"><span class="ebadge b-soon">Soon</span></div>
+      </div>
+      <div class="event-card">
+        <div class="ec-thumb"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=300&q=80" alt=""></div>
+        <div class="ec-body"><div class="ec-name">Music Festival</div><div class="ec-date">Dec 22, 2025 · Karachi</div></div>
+        <div class="ec-badge-wrap"><span class="ebadge b-full">Full</span></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-mini"><i class="ti ti-calendar stat-icon si-blue"></i><div class="stat-vals"><div class="sn">12K+</div><div class="sl">Events</div></div></div>
+        <div class="stat-mini"><i class="ti ti-star stat-icon si-orange"></i><div class="stat-vals"><div class="sn">98%</div><div class="sl">Rated</div></div></div>
+        <div class="stat-mini"><i class="ti ti-map-pin stat-icon si-red"></i><div class="stat-vals"><div class="sn">200+</div><div class="sl">Cities</div></div></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    // Eye toggle
-    const eyeBtn = document.getElementById('eyeBtn');
-    const eyeIcon = document.getElementById('eyeIcon');
-    const pwdInput = document.getElementById('password');
-    eyeBtn.addEventListener('click', () => {
-        const show = pwdInput.type === 'password';
-        pwdInput.type = show ? 'text' : 'password';
-        eyeIcon.className = show ? 'ti ti-eye-off' : 'ti ti-eye';
-    });
-
-    // Error from URL
-    const params = new URLSearchParams(window.location.search);
-    const errorBox = document.getElementById('errorBox');
-    const errorMsg = document.getElementById('errorMsg');
-    const code = params.get('error');
-    if (code === '1') {
-        errorMsg.textContent = 'Incorrect email or password. Please try again.';
-        errorBox.classList.add('show');
-    } else if (code === '2') {
-        errorMsg.textContent = 'Please fill in both fields.';
-        errorBox.classList.add('show');
-    }
+const eyeBtn = document.getElementById('eyeBtn');
+const eyeIcon = document.getElementById('eyeIcon');
+const pwdInput = document.getElementById('password');
+eyeBtn.addEventListener('click', () => {
+  const show = pwdInput.type === 'password';
+  pwdInput.type = show ? 'text' : 'password';
+  eyeIcon.className = show ? 'ti ti-eye-off' : 'ti ti-eye';
+});
+const params = new URLSearchParams(window.location.search);
+const errorBox = document.getElementById('errorBox');
+const errorMsg = document.getElementById('errorMsg');
+const code = params.get('error');
+if (code === '1') { errorMsg.textContent = 'Incorrect email or password. Please try again.'; errorBox.classList.add('show'); }
+else if (code === '2') { errorMsg.textContent = 'Please fill in both fields.'; errorBox.classList.add('show'); }
 </script>
 </body>
 </html>

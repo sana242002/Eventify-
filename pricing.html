@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Pricing — Eventify</title>
+    <title>Choose Your Package — Eventify</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <style>
@@ -54,8 +54,8 @@
         .logo-text span { color: var(--orange); }
 
         /* Page */
-        .page-wrap { position: relative; z-index: 1; padding: 60px 24px 80px; }
-        .page-header { text-align: center; margin-bottom: 48px; }
+        .page-wrap { position: relative; z-index: 1; padding: 56px 24px 80px; }
+        .page-header { text-align: center; margin-bottom: 36px; }
         .sec-tag {
             font-size: 10.5px; font-weight: 700; letter-spacing: 2px;
             text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
@@ -65,67 +65,114 @@
         .page-header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.2px; margin-bottom: 10px; }
         .page-header p { font-size: 0.95rem; color: rgba(255,255,255,0.42); }
 
-        .pricing-grid {
-            max-width: 860px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
-            margin-bottom: 28px;
-        }
-
-        .pricing-card {
-            background: rgba(255,255,255,0.025);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px; padding: 32px 28px;
-            backdrop-filter: blur(12px);
+        /* ===== Booking Summary Card ===== */
+        .summary-card {
+            max-width: 860px; margin: 0 auto 44px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,140,0,0.20);
+            border-radius: 22px; padding: 30px 34px;
+            backdrop-filter: blur(14px);
             position: relative; overflow: hidden;
-            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        .pricing-card:hover { border-color: rgba(255,140,0,0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
-        .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
-
-        .pricing-card h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; }
-        .pricing-card p { font-size: 0.875rem; color: rgba(255,255,255,0.42); margin-bottom: 20px; }
-
-        .form-label-dark { display: block; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 9px; }
-
-        select {
-            width: 100%; padding: 13px 16px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 12px; color: #fff; font-size: 14px;
-            font-family: 'Inter', sans-serif; outline: none;
-            appearance: none; -webkit-appearance: none;
-            cursor: pointer; transition: all 0.2s;
+        .summary-card .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+        .summary-title {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.6px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 22px;
         }
-        select option { background: #12122a; color: #fff; }
-        select:focus { border-color: rgba(255,140,0,0.50); background: rgba(255,255,255,0.07); box-shadow: 0 0 0 3px rgba(255,140,0,0.10); }
-
-        /* Total card */
-        .total-card {
-            max-width: 860px; margin: 0 auto 28px;
-            background: rgba(255,140,0,0.06);
-            border: 1px solid rgba(255,140,0,0.18);
-            border-radius: 20px; padding: 32px 36px;
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 24px; flex-wrap: wrap;
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
         }
-        .total-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
-        .total-card p { font-size: 0.85rem; color: rgba(255,255,255,0.40); }
-        .total-price-display { font-size: 2.6rem; font-weight: 900; color: var(--orange); letter-spacing: -2px; }
+        .summary-item { display: flex; flex-direction: column; gap: 6px; }
+        .summary-item .s-label { font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+        .summary-item .s-value { font-size: 15px; font-weight: 700; color: #fff; }
+        .summary-item.cost .s-value { color: var(--orange); font-size: 1.6rem; font-weight: 900; letter-spacing: -1px; }
+        .summary-divider { width: 1px; background: rgba(255,255,255,0.08); }
 
-        .submit-wrap { max-width: 860px; margin: 0 auto; }
-        .btn-submit {
-            width: 100%; padding: 15px;
+        /* ===== Packages ===== */
+        .packages-heading { text-align: center; font-size: 1.1rem; font-weight: 800; margin: 0 auto 26px; max-width: 860px; }
+        .packages-grid {
+            max-width: 1000px; margin: 0 auto 36px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+            align-items: stretch;
+        }
+
+        .package-card {
+            position: relative;
+            background: rgba(255,255,255,0.025);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 22px; padding: 34px 28px 28px;
+            backdrop-filter: blur(12px);
+            display: flex; flex-direction: column;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+        }
+        .package-card:hover { transform: translateY(-6px); border-color: rgba(255,140,0,0.30); box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
+        .package-card.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,140,0,0.18), 0 20px 50px rgba(0,0,0,0.45); }
+        .package-card .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); opacity: 0; transition: opacity 0.3s; }
+        .package-card.selected .card-top-strip { opacity: 1; }
+
+        .package-card.featured {
+            border-color: rgba(255,140,0,0.45);
+            background: linear-gradient(180deg, rgba(255,140,0,0.08), rgba(255,255,255,0.02));
+            transform: scale(1.03);
+        }
+        .package-card.featured:hover { transform: scale(1.03) translateY(-6px); }
+
+        .popular-badge {
+            position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--orange), var(--orange-deep));
-            color: #fff; font-size: 15px; font-weight: 700;
+            color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 0.4px;
+            padding: 6px 16px; border-radius: 20px;
+            box-shadow: 0 6px 18px var(--orange-glow);
+            white-space: nowrap;
+        }
+
+        .pkg-icon { font-size: 1.8rem; margin-bottom: 14px; }
+        .pkg-name { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
+        .pkg-tagline { font-size: 12.5px; color: rgba(255,255,255,0.40); margin-bottom: 20px; }
+
+        .pkg-price { font-size: 2.4rem; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 22px; }
+        .pkg-price span { font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.40); letter-spacing: 0; }
+
+        .pkg-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; flex-grow: 1; }
+        .pkg-features li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; color: rgba(255,255,255,0.75); line-height: 1.3; }
+        .pkg-features li i { color: var(--orange); font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+
+        .btn-select {
+            width: 100%; padding: 13px; text-align: center;
+            background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.12);
+            color: #fff; font-size: 14px; font-weight: 700;
+            border-radius: 12px; cursor: pointer; transition: all 0.25s;
+        }
+        .package-card:hover .btn-select { border-color: rgba(255,140,0,0.35); }
+        .package-card.selected .btn-select,
+        .package-card.featured .btn-select {
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            border-color: transparent; box-shadow: 0 8px 22px var(--orange-glow);
+        }
+        .package-card.selected .btn-select::after { content: ' ✓'; }
+
+        /* Continue */
+        .submit-wrap { max-width: 1000px; margin: 0 auto; }
+        .btn-submit {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; font-size: 15.5px; font-weight: 700;
             border: none; border-radius: 13px; cursor: pointer;
             box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s;
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+        .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
+        @media (max-width: 860px) {
+            .packages-grid { grid-template-columns: 1fr; max-width: 420px; }
+            .package-card.featured { transform: none; }
+            .package-card.featured:hover { transform: translateY(-6px); }
+            .summary-grid { grid-template-columns: 1fr 1fr; }
+        }
         @media (max-width: 640px) {
-            .pricing-grid { grid-template-columns: 1fr; }
             .navbar-custom { padding: 14px 20px; }
-            .total-card { flex-direction: column; text-align: center; }
+            .summary-card { padding: 24px 20px; }
         }
     </style>
 </head>
@@ -148,78 +195,214 @@
 
 <div class="page-wrap">
     <div class="page-header">
-        <div class="sec-tag">Step 3 of 3</div>
-        <h1>Select Your Event Options 💰</h1>
-        <p>Choose an event type and decor to get the final price.</p>
+        <div class="sec-tag">Step 4 of 4</div>
+        <h1>Choose Your Package 💰</h1>
+        <p>Select the package that fits your event requirements.</p>
     </div>
 
-    <div class="pricing-grid">
-        <div class="pricing-card">
-            <div class="card-top-strip"></div>
-            <h3>Event Type</h3>
-            <p>Select the type of event you're hosting:</p>
-            <label class="form-label-dark">Event Type</label>
-            <select id="event-type" name="event_type">
-                <option value="100">🎂 Birthday — $100</option>
-                <option value="300">💍 Wedding — $300</option>
-                <option value="150">🎉 Party — $150</option>
-                <option value="200">💼 Corporate Event — $200</option>
-                <option value="250">🥂 Anniversary — $250</option>
-            </select>
-        </div>
-
-        <div class="pricing-card">
-            <div class="card-top-strip"></div>
-            <h3>Decor Type</h3>
-            <p>Select the decor type for your event:</p>
-            <label class="form-label-dark">Decor Package</label>
-            <select id="decor-type" name="decor_type">
-                <option value="0.2">✨ Basic Decor — 20%</option>
-                <option value="0.5">🌟 Standard Decor — 50%</option>
-                <option value="1">💎 Premium Decor — 100%</option>
-            </select>
+    <!-- Booking Summary -->
+    <div class="summary-card">
+        <div class="card-top-strip"></div>
+        <div class="summary-title"><i class="ti ti-clipboard-check"></i> Your Event Summary</div>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="s-label">Event</span>
+                <span class="s-value" id="summary-event">—</span>
+            </div>
+            <div class="summary-item">
+                <span class="s-label">Theme</span>
+                <span class="s-value" id="summary-theme">—</span>
+            </div>
+            <div class="summary-item">
+                <span class="s-label">Date</span>
+                <span class="s-value" id="summary-date">—</span>
+            </div>
+            <div class="summary-item cost">
+                <span class="s-label">Estimated Cost</span>
+                <span class="s-value" id="summary-cost">$0</span>
+            </div>
         </div>
     </div>
 
-    <div class="total-card">
-        <div>
-            <h3>Total Price</h3>
-            <p>Based on your event type and decor selection</p>
-        </div>
-        <div id="total-price" class="total-price-display">$120.00</div>
-    </div>
+    <h2 class="packages-heading">Choose a package to add to your event</h2>
 
-    <div class="submit-wrap">
-        <form action="pricing.php" method="POST" id="pricingForm">
-            <input type="hidden" id="hidden-event-type" name="event_type" value="100">
-            <input type="hidden" id="hidden-decor-type" name="decor_type" value="0.2">
-            <input type="hidden" id="hidden-total-price" name="total_price" value="120.00">
-            <button class="btn-submit" id="confirm-button" type="submit">Confirm &amp; Book →</button>
-        </form>
-    </div>
+    <form id="pricingForm" action="payment.html" method="GET">
+        <div class="packages-grid" id="packagesGrid">
+
+            <!-- Basic -->
+            <label class="package-card" id="card-basic" for="pkg-basic">
+                <div class="card-top-strip"></div>
+                <div class="pkg-icon">🎈</div>
+                <div class="pkg-name">Basic Package</div>
+                <div class="pkg-tagline">Perfect for small events</div>
+                <div class="pkg-price">$500</div>
+                <ul class="pkg-features">
+                    <li><i class="ti ti-check"></i> Basic Decoration</li>
+                    <li><i class="ti ti-check"></i> Simple Lighting</li>
+                    <li><i class="ti ti-check"></i> Seating Arrangement</li>
+                    <li><i class="ti ti-check"></i> Event Coordination</li>
+                </ul>
+                <input type="radio" name="package" id="pkg-basic" value="Basic Package" data-price="500" style="display:none;">
+                <span class="btn-select">Select Plan</span>
+            </label>
+
+            <!-- Premium -->
+            <label class="package-card featured selected" id="card-premium" for="pkg-premium">
+                <span class="popular-badge">⭐ Most Popular</span>
+                <div class="card-top-strip"></div>
+                <div class="pkg-icon">🎉</div>
+                <div class="pkg-name">Premium Package</div>
+                <div class="pkg-tagline">Best for medium &amp; large events</div>
+                <div class="pkg-price">$1000</div>
+                <ul class="pkg-features">
+                    <li><i class="ti ti-check"></i> Premium Decoration</li>
+                    <li><i class="ti ti-check"></i> Catering Service</li>
+                    <li><i class="ti ti-check"></i> Photography</li>
+                    <li><i class="ti ti-check"></i> Sound System</li>
+                    <li><i class="ti ti-check"></i> Event Management</li>
+                </ul>
+                <input type="radio" name="package" id="pkg-premium" value="Premium Package" data-price="1000" checked style="display:none;">
+                <span class="btn-select">Select Plan</span>
+            </label>
+
+            <!-- Luxury -->
+            <label class="package-card" id="card-luxury" for="pkg-luxury">
+                <div class="card-top-strip"></div>
+                <div class="pkg-icon">👑</div>
+                <div class="pkg-name">Luxury Package</div>
+                <div class="pkg-tagline">For high-end, premium events</div>
+                <div class="pkg-price">$2000</div>
+                <ul class="pkg-features">
+                    <li><i class="ti ti-check"></i> Luxury Decoration</li>
+                    <li><i class="ti ti-check"></i> Designer Stage</li>
+                    <li><i class="ti ti-check"></i> Full Catering</li>
+                    <li><i class="ti ti-check"></i> Professional Photography</li>
+                    <li><i class="ti ti-check"></i> Complete Event Management</li>
+                    <li><i class="ti ti-check"></i> VIP Services</li>
+                </ul>
+                <input type="radio" name="package" id="pkg-luxury" value="Luxury Package" data-price="2000" style="display:none;">
+                <span class="btn-select">Select Plan</span>
+            </label>
+
+        </div>
+
+        <!-- Hidden fields carrying everything to pricing.php -->
+        <input type="hidden" id="hidden-event-type-name" name="event_type_name" value="">
+        <input type="hidden" id="hidden-event-type" name="event_type" value="">
+        <input type="hidden" id="hidden-decor-type-name" name="decor_type_name" value="">
+        <input type="hidden" id="hidden-decor-type" name="decor_type" value="">
+        <input type="hidden" id="hidden-event-date" name="event_date" value="">
+        <input type="hidden" id="hidden-package-name" name="package_name" value="Premium Package">
+        <input type="hidden" id="hidden-package-price" name="package_price" value="1000">
+        <input type="hidden" id="hidden-estimated-cost" name="estimated_cost" value="0">
+        <input type="hidden" id="hidden-total-price" name="total_price" value="0">
+
+        <div class="submit-wrap">
+            <button class="btn-submit" id="confirm-button" type="button">Continue to Payment →</button>
+        </div>
+    </form>
 </div>
 
 <script>
-    function updateTotalPrice() {
-        const eventPrice = parseFloat(document.getElementById('event-type').value);
-        const decorMultiplier = parseFloat(document.getElementById('decor-type').value);
-        const totalPrice = eventPrice + (eventPrice * decorMultiplier);
-        document.getElementById('total-price').innerText = '$' + totalPrice.toFixed(2);
-        document.getElementById('hidden-total-price').value = totalPrice.toFixed(2);
-        document.getElementById('hidden-event-type').value = document.getElementById('event-type').value;
-        document.getElementById('hidden-decor-type').value = document.getElementById('decor-type').value;
+    // Base price for every event type (matches names used in event.html)
+    const eventPrices = {
+        "Music Concert":      { emoji: "🎵", price: 200 },
+        "Art Exhibition":     { emoji: "🎨", price: 150 },
+        "Cultural Event":     { emoji: "🌍", price: 180 },
+        "Wedding Ceremony":   { emoji: "💍", price: 300 },
+        "Birthday":           { emoji: "🎂", price: 100 },
+        "Outdoor Picnic":     { emoji: "🌿", price: 120 }
+    };
+
+    // Decor multiplier for every theme (matches names used in theme.html)
+    const themePrices = {
+        "Royal Luxury":          { emoji: "💎", multiplier: 1.0 },
+        "Modern Elegant":        { emoji: "🤍", multiplier: 0.5 },
+        "Garden Romance":        { emoji: "🌸", multiplier: 0.7 },
+        "Traditional Culture":   { emoji: "🪔", multiplier: 0.8 },
+        "Kids Fun Theme":        { emoji: "🎈", multiplier: 0.2 },
+        "Princess Theme":        { emoji: "👑", multiplier: 0.5 },
+        "Luxury Birthday":       { emoji: "🥂", multiplier: 1.0 },
+        "Neon Party":            { emoji: "🟣", multiplier: 0.6 },
+        "Professional Business": { emoji: "💼", multiplier: 0.3 },
+        "Tech Innovation":       { emoji: "💻", multiplier: 0.6 },
+        "Conference Style":      { emoji: "🎤", multiplier: 0.5 },
+        "Networking Lounge":     { emoji: "🛋️", multiplier: 0.4 },
+        "Neon Night":            { emoji: "🌃", multiplier: 0.5 },
+        "Festival Vibes":        { emoji: "🎪", multiplier: 0.6 },
+        "DJ Party":              { emoji: "🎧", multiplier: 0.7 },
+        "Outdoor Stage":         { emoji: "🌅", multiplier: 0.4 },
+        "Minimal Style":         { emoji: "⚪", multiplier: 0.2 },
+        "Premium Theme":         { emoji: "✨", multiplier: 1.0 },
+        "Garden Theme":          { emoji: "🌿", multiplier: 0.3 }
+    };
+
+    // Pull what the user chose in the earlier steps
+    const params = new URLSearchParams(window.location.search);
+    const selectedEvent = params.get('event') || localStorage.getItem('selectedEvent') || '';
+    const selectedTheme = params.get('theme') || localStorage.getItem('selectedTheme') || '';
+    const selectedDate  = params.get('date') || localStorage.getItem('selectedDate') || '';
+
+    const eventInfo = eventPrices[selectedEvent] || { emoji: "🎉", price: 100 };
+    const themeInfo = themePrices[selectedTheme] || { emoji: "✨", multiplier: 0.5 };
+
+    const estimatedCost = eventInfo.price + (eventInfo.price * themeInfo.multiplier);
+
+    // Fill summary card
+    document.getElementById('summary-event').textContent = selectedEvent ? `${eventInfo.emoji} ${selectedEvent}` : 'Not selected';
+    document.getElementById('summary-theme').textContent = selectedTheme ? `${themeInfo.emoji} ${selectedTheme}` : 'Not selected';
+    document.getElementById('summary-date').textContent = selectedDate ? formatDate(selectedDate) : 'Not set';
+    document.getElementById('summary-cost').textContent = '$' + estimatedCost.toFixed(0);
+
+    function formatDate(d) {
+        try {
+            const dt = new Date(d);
+            if (isNaN(dt)) return d;
+            return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        } catch (e) { return d; }
     }
 
-    document.getElementById('event-type').addEventListener('change', updateTotalPrice);
-    document.getElementById('decor-type').addEventListener('change', updateTotalPrice);
-    window.onload = updateTotalPrice;
+    // Fill hidden fields that don't depend on package selection
+    document.getElementById('hidden-event-type-name').value = selectedEvent;
+    document.getElementById('hidden-event-type').value = eventInfo.price;
+    document.getElementById('hidden-decor-type-name').value = selectedTheme;
+    document.getElementById('hidden-decor-type').value = themeInfo.multiplier;
+    document.getElementById('hidden-event-date').value = selectedDate;
+    document.getElementById('hidden-estimated-cost').value = estimatedCost.toFixed(2);
 
-    document.getElementById('confirm-button').addEventListener('click', function(e) {
-        if (confirm('Confirm your booking?')) {
-            return true;
-        }
-        e.preventDefault();
+    // Package selection logic
+    function updateTotal() {
+        const checked = document.querySelector('input[name="package"]:checked');
+        const pkgPrice = parseFloat(checked.dataset.price);
+        const total = pkgPrice + estimatedCost;
+
+        document.getElementById('hidden-package-name').value = checked.value;
+        document.getElementById('hidden-package-price').value = pkgPrice;
+        document.getElementById('hidden-total-price').value = total.toFixed(2);
+    }
+
+    document.querySelectorAll('.package-card').forEach(card => {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            this.querySelector('input[type="radio"]').checked = true;
+            updateTotal();
+        });
     });
+
+    document.getElementById('confirm-button').addEventListener('click', function (e) {
+        e.preventDefault();
+        updateTotal();
+        // Persist everything for the payment page
+        localStorage.setItem('selectedPackage', document.getElementById('hidden-package-name').value);
+        localStorage.setItem('selectedPackagePrice', document.getElementById('hidden-package-price').value);
+        localStorage.setItem('estimatedCost', document.getElementById('hidden-estimated-cost').value);
+        localStorage.setItem('grandTotal', document.getElementById('hidden-total-price').value);
+        window.location.href = 'payment.html';
+    });
+
+    // Initialize with Premium pre-selected
+    updateTotal();
 </script>
 </body>
 </html>

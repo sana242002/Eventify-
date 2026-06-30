@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment — Eventify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --orange: #FF8C00; --orange-deep: #ff4500; --orange-glow: rgba(255,140,0,0.35); }
+        body { font-family: 'Inter', Arial, sans-serif; background: #080818; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 80% 70% at 0% 0%,   rgba(255,100,0,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 70% 80% at 100% 30%, rgba(100,50,255,0.15) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 60% at 50% 100%, rgba(0,150,255,0.10) 0%, transparent 55%),
+                #080818;
+        }
+        .mesh-bg::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                radial-gradient(circle 1.5px at 15% 20%, rgba(255,140,0,0.70) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 40% 60%, rgba(150,100,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1.5px at 75% 25%, rgba(0,200,255,0.50) 0%, transparent 0%),
+                radial-gradient(circle 1px  at 90% 70%, rgba(255,140,0,0.45) 0%, transparent 0%),
+                radial-gradient(circle 2px  at 60% 10%, rgba(255,200,0,0.55)  0%, transparent 0%),
+                radial-gradient(circle 1px  at 30% 90%, rgba(0,255,200,0.40)  0%, transparent 0%);
+            background-size: 23% 23%;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center;
+            padding: 14px 56px;
+            background: rgba(8,8,24,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(24px);
+        }
+        .logo-row { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-cube { width: 36px; height: 36px; position: relative; transform-style: preserve-3d; animation: spinCube 9s linear infinite; }
+        @keyframes spinCube { 0% { transform: rotateX(20deg) rotateY(0deg); } 100% { transform: rotateX(20deg) rotateY(360deg); } }
+        .cube-face { position: absolute; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 15px; color: #fff; border: 1px solid rgba(255,140,0,0.35); }
+        .cf-front  { background: rgba(255,130,0,0.90); transform: translateZ(18px); }
+        .cf-back   { background: rgba(200,80,0,0.70);  transform: rotateY(180deg) translateZ(18px); }
+        .cf-left   { background: rgba(180,60,0,0.65);  transform: rotateY(-90deg) translateZ(18px); }
+        .cf-right  { background: rgba(220,100,0,0.75); transform: rotateY(90deg)  translateZ(18px); }
+        .cf-top    { background: rgba(255,160,0,0.85); transform: rotateX(90deg)  translateZ(18px); }
+        .cf-bottom { background: rgba(160,50,0,0.55);  transform: rotateX(-90deg) translateZ(18px); }
+        .logo-text { font-size: 1.25rem; font-weight: 800; color: #fff; }
+        .logo-text span { color: var(--orange); }
+
+        /* Page */
+        .page-wrap { position: relative; z-index: 1; padding: 56px 24px 80px; }
+        .page-header { text-align: center; margin-bottom: 36px; }
+        .sec-tag {
+            font-size: 10.5px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--orange); margin-bottom: 12px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .sec-tag::before { content: ''; display: block; width: 18px; height: 1.5px; background: var(--orange); }
+        .page-header h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1.2px; margin-bottom: 10px; }
+        .page-header p { font-size: 0.95rem; color: rgba(255,255,255,0.42); }
+
+        .layout {
+            max-width: 1020px; margin: 0 auto;
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px;
+            align-items: start;
+        }
+
+        .glass-card {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 30px 30px;
+            backdrop-filter: blur(12px);
+            position: relative; overflow: hidden;
+        }
+        .glass-card .card-top-strip { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+        .glass-card h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 22px; letter-spacing: -0.3px; display: flex; align-items: center; gap: 9px; }
+        .glass-card h3 i { color: var(--orange); }
+
+        /* Payment methods */
+        .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 26px; }
+        .method-card {
+            position: relative;
+            border: 1.5px solid rgba(255,255,255,0.10);
+            border-radius: 14px; padding: 18px 16px;
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer; transition: all 0.25s;
+            background: rgba(255,255,255,0.02);
+        }
+        .method-card:hover { border-color: rgba(255,140,0,0.30); }
+        .method-card.selected { border-color: var(--orange); background: rgba(255,140,0,0.07); box-shadow: 0 0 0 3px rgba(255,140,0,0.14); }
+        .method-card input { display: none; }
+        .method-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: rgba(255,140,0,0.12); display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .method-name { font-size: 13.5px; font-weight: 700; }
+        .method-sub { font-size: 11px; color: rgba(255,255,255,0.40); }
+        .method-check {
+            position: absolute; top: 10px; right: 10px;
+            width: 18px; height: 18px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.20);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .method-card.selected .method-check { background: var(--orange); border-color: var(--orange); }
+        .method-check i { font-size: 10px; opacity: 0; }
+        .method-card.selected .method-check i { opacity: 1; }
+
+        /* Card details form */
+        .card-details { display: none; flex-direction: column; gap: 16px; }
+        .card-details.active { display: flex; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-label-dark { display: block; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 8px; }
+        .input-dark {
+            width: 100%; padding: 13px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 12px; color: #fff; font-size: 14px;
+            font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s;
+        }
+        .input-dark:focus { border-color: rgba(255,140,0,0.50); background: rgba(255,255,255,0.07); box-shadow: 0 0 0 3px rgba(255,140,0,0.10); }
+        .input-dark::placeholder { color: rgba(255,255,255,0.25); }
+
+        .wallet-note, .cash-note {
+            display: none; align-items: center; gap: 10px;
+            background: rgba(255,140,0,0.06); border: 1px solid rgba(255,140,0,0.18);
+            border-radius: 12px; padding: 14px 16px; font-size: 13px; color: rgba(255,255,255,0.65);
+        }
+        .wallet-note.active, .cash-note.active { display: flex; }
+        .wallet-note i, .cash-note i { color: var(--orange); font-size: 18px; flex-shrink: 0; }
+
+        /* Order summary (right column) */
+        .summary-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
+        .summary-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13.5px; }
+        .summary-row .label { color: rgba(255,255,255,0.45); }
+        .summary-row .value { font-weight: 700; color: #fff; text-align: right; }
+        .summary-divider-line { height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0; }
+        .summary-row.total .label { font-size: 14px; font-weight: 700; color: #fff; }
+        .summary-row.total .value { font-size: 1.6rem; font-weight: 900; color: var(--orange); letter-spacing: -1px; }
+
+        .secure-note { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: rgba(255,255,255,0.35); margin-top: 18px; }
+        .secure-note i { color: var(--orange); }
+
+        .btn-submit {
+            width: 100%; padding: 16px; margin-top: 22px;
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; font-size: 15px; font-weight: 700;
+            border: none; border-radius: 13px; cursor: pointer;
+            box-shadow: 0 8px 28px var(--orange-glow); transition: all 0.25s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,140,0,0.50); }
+
+        @media (max-width: 860px) {
+            .layout { grid-template-columns: 1fr; }
+            .method-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .navbar-custom { padding: 14px 20px; }
+            .glass-card { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="mesh-bg"></div>
+
+<nav class="navbar-custom">
+    <a class="logo-row" href="main.html">
+        <div class="logo-cube">
+            <div class="cube-face cf-front">E</div>
+            <div class="cube-face cf-back"></div>
+            <div class="cube-face cf-left"></div>
+            <div class="cube-face cf-right"></div>
+            <div class="cube-face cf-top"></div>
+            <div class="cube-face cf-bottom"></div>
+        </div>
+        <span class="logo-text">Event<span>ify</span></span>
+    </a>
+</nav>
+
+<div class="page-wrap">
+    <div class="page-header">
+        <div class="sec-tag">Step 5 of 5</div>
+        <h1>Complete Your Payment 🔒</h1>
+        <p>Secure checkout — review your order and confirm your booking.</p>
+    </div>
+
+    <form id="paymentForm" action="booking.php" method="POST">
+    <div class="layout">
+
+        <!-- LEFT: Payment method -->
+        <div class="glass-card">
+            <div class="card-top-strip"></div>
+            <h3><i class="ti ti-credit-card"></i> Payment Method</h3>
+
+            <div class="method-grid">
+                <label class="method-card selected" for="pm-card">
+                    <div class="method-check"><i class="ti ti-check"></i></div>
+                    <div class="method-icon">💳</div>
+                    <div>
+                        <div class="method-name">Credit / Debit Card</div>
+                        <div class="method-sub">Visa, Mastercard</div>
+                    </div>
+                    <input type="radio" name="payment_method" id="pm-card" value="Card" checked>
+                </label>
+
+                <label class="method-card" for="pm-easypaisa">
+                    <div class="method-check"><i class="ti ti-check"></i></div>
+                    <div class="method-icon">📱</div>
+                    <div>
+                        <div class="method-name">EasyPaisa</div>
+                        <div class="method-sub">Mobile wallet</div>
+                    </div>
+                    <input type="radio" name="payment_method" id="pm-easypaisa" value="EasyPaisa">
+                </label>
+
+                <label class="method-card" for="pm-jazzcash">
+                    <div class="method-check"><i class="ti ti-check"></i></div>
+                    <div class="method-icon">📲</div>
+                    <div>
+                        <div class="method-name">JazzCash</div>
+                        <div class="method-sub">Mobile wallet</div>
+                    </div>
+                    <input type="radio" name="payment_method" id="pm-jazzcash" value="JazzCash">
+                </label>
+
+                <label class="method-card" for="pm-cash">
+                    <div class="method-check"><i class="ti ti-check"></i></div>
+                    <div class="method-icon">💵</div>
+                    <div>
+                        <div class="method-name">Cash on Arrival</div>
+                        <div class="method-sub">Pay at the event</div>
+                    </div>
+                    <input type="radio" name="payment_method" id="pm-cash" value="Cash on Arrival">
+                </label>
+            </div>
+
+            <!-- Card fields -->
+            <div class="card-details active" id="details-card">
+                <div>
+                    <label class="form-label-dark">Cardholder Name</label>
+                    <input type="text" class="input-dark" name="card_name" placeholder="e.g. Ayesha Khan">
+                </div>
+                <div>
+                    <label class="form-label-dark">Card Number</label>
+                    <input type="text" class="input-dark" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label class="form-label-dark">Expiry Date</label>
+                        <input type="text" class="input-dark" name="card_expiry" placeholder="MM / YY" maxlength="7">
+                    </div>
+                    <div>
+                        <label class="form-label-dark">CVV</label>
+                        <input type="text" class="input-dark" name="card_cvv" placeholder="•••" maxlength="4">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet note -->
+            <div class="wallet-note" id="details-wallet">
+                <i class="ti ti-device-mobile"></i>
+                <span>You'll receive a payment request on your registered mobile number to confirm this transaction.</span>
+            </div>
+
+            <!-- Cash note -->
+            <div class="cash-note" id="details-cash">
+                <i class="ti ti-cash"></i>
+                <span>Pay the full amount directly to our team on the day of your event.</span>
+            </div>
+        </div>
+
+        <!-- RIGHT: Order summary -->
+        <div class="glass-card">
+            <div class="card-top-strip"></div>
+            <h3><i class="ti ti-receipt"></i> Order Summary</h3>
+
+            <div class="summary-list">
+                <div class="summary-row">
+                    <span class="label">Event</span>
+                    <span class="value" id="sum-event">—</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Theme</span>
+                    <span class="value" id="sum-theme">—</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Date</span>
+                    <span class="value" id="sum-date">—</span>
+                </div>
+                <div class="summary-divider-line"></div>
+                <div class="summary-row">
+                    <span class="label">Package</span>
+                    <span class="value" id="sum-package">—</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Event + Theme Cost</span>
+                    <span class="value" id="sum-estimated">$0</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Package Price</span>
+                    <span class="value" id="sum-pkg-price">$0</span>
+                </div>
+                <div class="summary-divider-line"></div>
+                <div class="summary-row total">
+                    <span class="label">Total Amount</span>
+                    <span class="value" id="sum-total">$0.00</span>
+                </div>
+            </div>
+
+            <div class="secure-note"><i class="ti ti-lock"></i> Your payment information is encrypted &amp; secure.</div>
+
+            <!-- Hidden fields forwarded to booking.php -->
+            <input type="hidden" name="event_type_name" id="hidden-event">
+            <input type="hidden" name="decor_type_name" id="hidden-theme">
+            <input type="hidden" name="event_date" id="hidden-date">
+            <input type="hidden" name="package_name" id="hidden-package">
+            <input type="hidden" name="package_price" id="hidden-package-price">
+            <input type="hidden" name="estimated_cost" id="hidden-estimated">
+            <input type="hidden" name="total_price" id="hidden-total">
+
+            <button type="submit" class="btn-submit" id="confirm-btn">Pay &amp; Confirm Booking →</button>
+        </div>
+
+    </div>
+    </form>
+</div>
+
+<script>
+    // Pull everything saved from the previous steps
+    const selectedEvent   = localStorage.getItem('selectedEvent') || '';
+    const selectedTheme   = localStorage.getItem('selectedTheme') || '';
+    const selectedDate    = localStorage.getItem('selectedDate') || '';
+    const selectedPackage = localStorage.getItem('selectedPackage') || 'Premium Package';
+    const packagePrice    = parseFloat(localStorage.getItem('selectedPackagePrice') || '1000');
+    const estimatedCost   = parseFloat(localStorage.getItem('estimatedCost') || '0');
+    const grandTotal      = parseFloat(localStorage.getItem('grandTotal') || (packagePrice + estimatedCost));
+
+    function formatDate(d) {
+        try {
+            const dt = new Date(d);
+            if (isNaN(dt)) return d || 'Not set';
+            return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        } catch (e) { return d || 'Not set'; }
+    }
+
+    document.getElementById('sum-event').textContent = selectedEvent || 'Not selected';
+    document.getElementById('sum-theme').textContent = selectedTheme || 'Not selected';
+    document.getElementById('sum-date').textContent = formatDate(selectedDate);
+    document.getElementById('sum-package').textContent = selectedPackage;
+    document.getElementById('sum-estimated').textContent = '$' + estimatedCost.toFixed(2);
+    document.getElementById('sum-pkg-price').textContent = '$' + packagePrice.toFixed(2);
+    document.getElementById('sum-total').textContent = '$' + grandTotal.toFixed(2);
+
+    document.getElementById('hidden-event').value = selectedEvent;
+    document.getElementById('hidden-theme').value = selectedTheme;
+    document.getElementById('hidden-date').value = selectedDate;
+    document.getElementById('hidden-package').value = selectedPackage;
+    document.getElementById('hidden-package-price').value = packagePrice;
+    document.getElementById('hidden-estimated').value = estimatedCost.toFixed(2);
+    document.getElementById('hidden-total').value = grandTotal.toFixed(2);
+
+    // Payment method switching
+    const allDetails = {
+        card: document.getElementById('details-card'),
+        wallet: document.getElementById('details-wallet'),
+        cash: document.getElementById('details-cash')
+    };
+
+    function showDetails(type) {
+        Object.values(allDetails).forEach(el => el.classList.remove('active'));
+        allDetails[type].classList.add('active');
+    }
+
+    document.querySelectorAll('.method-card').forEach(card => {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            if (radio.value === 'Card') showDetails('card');
+            else if (radio.value === 'Cash on Arrival') showDetails('cash');
+            else showDetails('wallet');
+        });
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function (e) {
+        if (!confirm('Confirm and complete this booking?')) {
+            e.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>

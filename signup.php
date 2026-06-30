@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("sss", $name, $email, $hashedPassword);
 
     if ($stmt->execute()) {
-        header("Location: main.html");
+        header("Location: main.php");
         exit();
     } else {
         die("Insert Error: " . $stmt->error);
