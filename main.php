@@ -118,8 +118,16 @@
             min-height: 90vh;
             display: flex; align-items: center; justify-content: center;
             text-align: center; padding: 80px 24px 60px;
+            background-image:
+                linear-gradient(180deg, rgba(6,6,20,0.88) 0%, rgba(6,6,20,0.72) 45%, rgba(8,8,24,0.94) 100%),
+                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255,140,0,0.18) 0%, transparent 60%),
+                url('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            perspective: 1200px;
         }
-        .hero-inner { max-width: 700px; }
+        .hero-inner { max-width: 700px; position: relative; transition: transform 0.2s ease-out; will-change: transform; }
         .badge-pill {
             display: inline-flex; align-items: center; gap: 9px;
             background: rgba(255,140,0,0.1); border: 1px solid rgba(255,140,0,0.28);
@@ -132,11 +140,45 @@
             animation: blink 2s ease-in-out infinite;
         }
         @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+        /* ── Converging rings intro effect ── */
+        .hero-rings { position: absolute; top: 50%; left: 50%; width: 0; height: 0; pointer-events: none; z-index: -1; }
+        .hero-ring {
+            position: absolute; top: 50%; left: 50%;
+            border-radius: 50%; border: 2px solid rgba(255,140,0,0.55);
+            box-shadow: 0 0 30px rgba(255,140,0,0.15);
+            opacity: 0;
+        }
+        .hero-ring-a {
+            width: 320px; height: 320px; margin: -160px 0 0 -160px;
+            animation: ringJoinA 1.7s cubic-bezier(0.2,0.7,0.2,1) 0.15s forwards;
+        }
+        .hero-ring-b {
+            width: 320px; height: 320px; margin: -160px 0 0 -160px;
+            border-color: rgba(255,69,0,0.5);
+            animation: ringJoinB 1.7s cubic-bezier(0.2,0.7,0.2,1) 0.15s forwards;
+        }
+        @keyframes ringJoinA {
+            0%   { opacity: 0; transform: translate(-220px, -70px) scale(0.55) rotate(-25deg); }
+            55%  { opacity: 0.9; }
+            100% { opacity: 0; transform: translate(0, 0) scale(1.55) rotate(0deg); }
+        }
+        @keyframes ringJoinB {
+            0%   { opacity: 0; transform: translate(220px, 70px) scale(0.55) rotate(25deg); }
+            55%  { opacity: 0.9; }
+            100% { opacity: 0; transform: translate(0, 0) scale(1.55) rotate(0deg); }
+        }
+
+        @keyframes heroTextIn {
+            0%   { opacity: 0; transform: translateY(26px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
         .hero h1 {
             font-size: clamp(2.8rem, 6vw, 4.8rem); font-weight: 900;
             letter-spacing: -2.5px; line-height: 1.06; margin-bottom: 20px;
             background: linear-gradient(160deg, #fff 30%, rgba(255,255,255,0.6));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            animation: heroTextIn 0.9s cubic-bezier(0.2,0.7,0.2,1) 0.75s both;
         }
         .hero h1 .accent {
             background: linear-gradient(135deg, #FF8C00, #ff4500, #ffb300);
@@ -186,9 +228,28 @@
         .sec-title { font-size: clamp(1.8rem, 2.8vw, 2.4rem); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 8px; }
         .sec-sub { font-size: 0.95rem; color: var(--muted); line-height: 1.75; max-width: 440px; }
 
-        /* ── 3D Image Showcase ── */
-        .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; perspective: 1400px; }
+        /* ── Centered Section Header ── */
+        .sec-header-center { text-align: center; max-width: 640px; margin: 0 auto 44px; display: flex; flex-direction: column; align-items: center; }
+        .sec-header-center .sec-tag { justify-content: center; }
+        .sec-header-center .sec-sub { max-width: 480px; margin: 14px auto 0; }
+
+        /* ── Scrolling Gallery ── */
+        .gallery-scroll-wrap {
+            position: relative; overflow: hidden;
+            -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+        }
+        .gallery-track {
+            display: flex; gap: 22px; width: max-content;
+            animation: gallery-scroll 42s linear infinite;
+        }
+        .gallery-scroll-wrap:hover .gallery-track { animation-play-state: paused; }
+        @keyframes gallery-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
         .img-3d-wrap {
+            flex: 0 0 340px;
             transform-style: preserve-3d;
             transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
         }
@@ -263,18 +324,60 @@
         /* ── Footer ── */
         footer {
             position: relative; z-index: 1;
-            padding: 40px 56px;
+            padding: 72px 56px 32px;
             background: rgba(255,255,255,0.015);
             border-top: 1px solid rgba(255,255,255,0.05);
         }
-        .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-        .footer-logo { font-size: 1.1rem; font-weight: 800; color: #fff; }
+        .footer-grid {
+            display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+            gap: 40px; margin-bottom: 48px;
+        }
+        .footer-logo { font-size: 1.15rem; font-weight: 800; color: #fff; }
         .footer-logo span { color: var(--orange); }
-        .footer-info { font-size: 11.5px; color: rgba(255,255,255,0.25); margin-top: 4px; }
-        .footer-links { display: flex; gap: 22px; }
+        .footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.7; margin: 14px 0 22px; max-width: 300px; }
+        .footer-social { display: flex; gap: 10px; }
+        .footer-social a {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.55); text-decoration: none; font-size: 15px;
+            transition: all 0.2s;
+        }
+        .footer-social a:hover { background: rgba(255,140,0,0.15); border-color: rgba(255,140,0,0.35); color: var(--orange); transform: translateY(-2px); }
+        .footer-col-title { font-size: 12.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #fff; margin-bottom: 18px; }
+        .footer-links-col { display: flex; flex-direction: column; gap: 12px; }
+        .footer-links-col a { font-size: 13.5px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; width: fit-content; }
+        .footer-links-col a:hover { color: var(--orange); }
+        .footer-contact-item { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 14px; line-height: 1.6; }
+        .footer-contact-item i { color: var(--orange); margin-top: 2px; }
+        .footer-newsletter { display: flex; gap: 8px; margin-top: 4px; }
+        .footer-newsletter input {
+            flex: 1; min-width: 0; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+            padding: 11px 14px; font-size: 13px; color: #fff; outline: none;
+        }
+        .footer-newsletter input::placeholder { color: rgba(255,255,255,0.3); }
+        .footer-newsletter input:focus { border-color: rgba(255,140,0,0.4); }
+        .footer-newsletter button {
+            background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+            color: #fff; border: none; border-radius: 10px; padding: 0 18px;
+            font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+        }
+        .footer-bottom {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 14px;
+            padding-top: 26px; border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .footer-links { display: flex; gap: 22px; flex-wrap: wrap; }
         .footer-links a { font-size: 12.5px; color: rgba(255,255,255,0.28); text-decoration: none; transition: color 0.2s; }
         .footer-links a:hover { color: var(--orange); }
-        .footer-copy { font-size: 11.5px; color: rgba(255,255,255,0.18); text-align: center; margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.04); }
+        .footer-copy { font-size: 11.5px; color: rgba(255,255,255,0.3); }
+        @media (max-width: 900px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 560px) {
+            .footer-grid { grid-template-columns: 1fr; }
+        }
 
         /* ── Responsive ── */
         @media (max-width: 992px) {
@@ -282,7 +385,8 @@
             .section { padding: 64px 24px; }
             .section-divider, .cta-banner { margin-left: 24px; margin-right: 24px; }
             .features-3d-grid { grid-template-columns: 1fr; }
-            .showcase-grid { grid-template-columns: 1fr; }
+            .img-3d-wrap { flex: 0 0 260px; }
+            .img-frame img { height: 220px; }
             .stats-bar { margin: 0 24px 60px; flex-wrap: wrap; gap: 24px; }
             .stat-sep { display: none; }
             footer { padding: 32px 24px; }
@@ -323,6 +427,10 @@
 <!-- Hero -->
 <section class="hero">
     <div class="hero-inner">
+        <div class="hero-rings" aria-hidden="true">
+            <div class="hero-ring hero-ring-a"></div>
+            <div class="hero-ring hero-ring-b"></div>
+        </div>
         <div class="badge-pill">
             <span class="badge-dot"></span>
             Now Live — Event Season 2025
@@ -353,24 +461,85 @@
 
 <!-- Image Showcase -->
 <section class="section" id="gallery">
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px;gap:24px;flex-wrap:wrap;">
-        <div>
-            <div class="sec-tag">Gallery</div>
-            <div class="sec-title">Real Events,<br>Real Moments</div>
-        </div>
+    <div class="sec-header-center">
+        <div class="sec-tag">Gallery</div>
+        <div class="sec-title">Real Events,<br>Real Moments</div>
         <div class="sec-sub">From intimate gatherings to massive conferences — we power them all, beautifully.</div>
     </div>
-    <div class="showcase-grid">
-        <div class="img-3d-wrap" id="img3d-1">
-            <div class="img-frame">
-                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=85" alt="Celebration crowd">
-                <div class="img-overlay-glass"><div class="img-tag">Celebration Events</div></div>
+    <div class="gallery-scroll-wrap">
+        <div class="gallery-track" id="galleryTrack">
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=85" alt="Celebration crowd">
+                    <div class="img-overlay-glass"><div class="img-tag">Celebration Events</div></div>
+                </div>
             </div>
-        </div>
-        <div class="img-3d-wrap" id="img3d-2">
-            <div class="img-frame">
-                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=900&q=85" alt="Conference hall">
-                <div class="img-overlay-glass"><div class="img-tag">Corporate Conferences</div></div>
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=900&q=85" alt="Conference hall">
+                    <div class="img-overlay-glass"><div class="img-tag">Corporate Conferences</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=85" alt="Concert lights">
+                    <div class="img-overlay-glass"><div class="img-tag">Live Concerts</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=900&q=85" alt="Conference audience">
+                    <div class="img-overlay-glass"><div class="img-tag">Business Summits</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=900&q=85" alt="Wedding event">
+                    <div class="img-overlay-glass"><div class="img-tag">Weddings</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=900&q=85" alt="Workshop session">
+                    <div class="img-overlay-glass"><div class="img-tag">Workshops & Meetups</div></div>
+                </div>
+            </div>
+            <!-- duplicate set for seamless infinite loop -->
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=85" alt="Celebration crowd">
+                    <div class="img-overlay-glass"><div class="img-tag">Celebration Events</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=900&q=85" alt="Conference hall">
+                    <div class="img-overlay-glass"><div class="img-tag">Corporate Conferences</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=85" alt="Concert lights">
+                    <div class="img-overlay-glass"><div class="img-tag">Live Concerts</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=900&q=85" alt="Conference audience">
+                    <div class="img-overlay-glass"><div class="img-tag">Business Summits</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=900&q=85" alt="Wedding event">
+                    <div class="img-overlay-glass"><div class="img-tag">Weddings</div></div>
+                </div>
+            </div>
+            <div class="img-3d-wrap" aria-hidden="true">
+                <div class="img-frame">
+                    <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=900&q=85" alt="Workshop session">
+                    <div class="img-overlay-glass"><div class="img-tag">Workshops & Meetups</div></div>
+                </div>
             </div>
         </div>
     </div>
@@ -380,8 +549,11 @@
 
 <!-- Features -->
 <section class="section">
-    <div class="sec-tag">Why Eventify</div>
-    <div class="sec-title" style="margin-bottom:40px;">Everything You Need,<br>Nothing You Don't</div>
+    <div class="sec-header-center" style="margin-bottom:48px;">
+        <div class="sec-tag">Why Eventify</div>
+        <div class="sec-title">Everything You Need,<br>Nothing You Don't</div>
+        <div class="sec-sub">Powerful tools, wrapped in a simple, beautiful experience for organizers of every size.</div>
+    </div>
     <div class="features-3d-grid">
         <div class="card-3d">
             <div class="card-icon-3d"><i class="bi bi-palette2" style="color:var(--orange);font-size:22px;"></i></div>
@@ -429,11 +601,48 @@
 
 <!-- Footer -->
 <footer>
-    <div class="footer-inner">
+    <div class="footer-grid">
         <div>
             <div class="footer-logo">Event<span>ify</span></div>
-            <div class="footer-info">123 Event Street, Celebration City · support@eventify.com · +1 (123) 456-7890</div>
+            <p class="footer-tagline">Eventify helps organizers plan, promote, and run unforgettable events — from intimate gatherings to global conferences.</p>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            </div>
         </div>
+        <div>
+            <div class="footer-col-title">Company</div>
+            <div class="footer-links-col">
+                <a href="about.html">About Us</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#">Careers</a>
+                <a href="contact.html">Contact Us</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-col-title">Support</div>
+            <div class="footer-links-col">
+                <a href="contact.html">Help Center</a>
+                <a href="#">FAQs</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+        <div>
+            <div class="footer-col-title">Stay Updated</div>
+            <div class="footer-contact-item"><i class="bi bi-geo-alt"></i><span>123 Event Street, Celebration City</span></div>
+            <div class="footer-contact-item"><i class="bi bi-envelope"></i><span>support@eventify.com</span></div>
+            <div class="footer-contact-item"><i class="bi bi-telephone"></i><span>+1 (123) 456-7890</span></div>
+            <div class="footer-newsletter">
+                <input type="email" placeholder="Your email address">
+                <button type="button">Subscribe</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-copy">© 2024 Eventify. All rights reserved.</div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
@@ -441,11 +650,24 @@
             <a href="about.html">About Us</a>
         </div>
     </div>
-    <div class="footer-copy">© 2024 Eventify. All rights reserved.</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // 3D mouse-tracking tilt on hero content
+    (() => {
+        const hero = document.querySelector('.hero');
+        const inner = document.querySelector('.hero-inner');
+        if (!hero || !inner) return;
+        hero.addEventListener('mousemove', e => {
+            const r = hero.getBoundingClientRect();
+            const x = (e.clientX - r.left) / r.width - 0.5;
+            const y = (e.clientY - r.top)  / r.height - 0.5;
+            inner.style.transform = `rotateX(${-y * 10}deg) rotateY(${x * 12}deg)`;
+        });
+        hero.addEventListener('mouseleave', () => { inner.style.transform = ''; });
+    })();
+
     // 3D mouse-tracking tilt on feature cards
     document.querySelectorAll('.card-3d').forEach(card => {
         card.addEventListener('mousemove', e => {
@@ -457,15 +679,13 @@
         card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
 
-    // 3D mouse-tracking tilt on images
-    [['img3d-1', 1], ['img3d-2', -1]].forEach(([id, dir]) => {
-        const el = document.getElementById(id);
-        if (!el) return;
+    // 3D mouse-tracking tilt on gallery images
+    document.querySelectorAll('.img-3d-wrap').forEach(el => {
         el.addEventListener('mousemove', e => {
             const r = el.getBoundingClientRect();
             const x = (e.clientX - r.left) / r.width - 0.5;
             const y = (e.clientY - r.top)  / r.height - 0.5;
-            el.style.transform = `rotateX(${-y * 12}deg) rotateY(${x * 14 * dir}deg) scale(1.02)`;
+            el.style.transform = `rotateX(${-y * 12}deg) rotateY(${x * 14}deg) scale(1.02)`;
         });
         el.addEventListener('mouseleave', () => { el.style.transform = ''; });
     });
